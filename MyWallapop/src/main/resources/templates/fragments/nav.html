@@ -7,6 +7,17 @@
 		</div>
 		<div class="collapse navbar-collapse" id="myNavbar">
 			<ul class="nav navbar-nav">
+			
+			<li id= "users-menu" class="dropdown" sec:authorize="hasRole('ROLE_ADMIN')">
+       		<a href="#" class="dropdown-toggle" data-toggle="dropdown"  >
+       			<span th:text="#{gestionUsuarios.title}"></span>  <span class="caret"></span>
+			</a>
+			<ul class="dropdown-menu">
+				
+				<li><a href="/user/list"><span th:text="#{verUsuarios.message}"></span></a></li>
+		
+			</ul>
+       </li>
 
 
 
@@ -29,7 +40,20 @@
 								th:text="#{language.es}"></span>
 						</a></li>
 					</ul>
+					
+				<li sec:authorize="!isAuthenticated()"><a href="/signup"
+					th:text="#{signup.message}"></a>
+						
+				</li>
+				<li sec:authorize="!isAuthenticated()"><a href="/login"
+					th:text="#{login.message}"></a>
+				</li>
+				<li sec:authorize="isAuthenticated()"><a href="/logout"><span
+						class="glyphicon glyphicon-log-in"></span> Logout</a>
+				</li>
 			</ul>
+			
+			
 		</div>
 	</div>
 </nav>
