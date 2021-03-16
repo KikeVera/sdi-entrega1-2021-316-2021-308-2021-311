@@ -9,7 +9,7 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.uniovi</groupId>
-	<artifactId>MyWallapop</artifactId>
+	<artifactId>sdi-entrega1-2021-316-2021-308-2021-311</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>MyWallapop</name>
 	<description>Aplicacion para compra/venta de artículos</description>
