@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -39,6 +40,22 @@ public class SecurityService {
 			SecurityContextHolder.getContext().setAuthentication(aToken);
 			logger.debug(String.format("Auto login %s successfully!", email));
 		}
+	}
+	
+	public boolean canBeLogged(String email, String password) {
+		UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+		UsernamePasswordAuthenticationToken aToken = new UsernamePasswordAuthenticationToken(userDetails, password,
+				userDetails.getAuthorities());
+		
+		
+		try {
+			authenticationManager.authenticate(aToken);
+		} catch (AuthenticationException e) {
+			return false;
+		}
+		return true;
+		
+		
 	}
 
 }
