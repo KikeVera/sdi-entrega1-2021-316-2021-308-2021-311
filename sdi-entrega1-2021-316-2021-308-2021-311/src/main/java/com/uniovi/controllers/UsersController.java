@@ -18,7 +18,7 @@ import org.springframework.validation.annotation.Validated;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.User;
 import com.uniovi.services.RolesService;
@@ -58,6 +58,17 @@ public class UsersController {
 		
 		model.addAttribute("usersList", listaUsuarios );
 		return "user/list";
+	}
+	
+	@RequestMapping(value="/user/delete", method = RequestMethod.POST)
+	public String deleteUser(@RequestParam(value = "checkboxUser", required = false) String checkboxValue[]){
+		
+		for(String email:checkboxValue) {
+			usersService.deleteUser(usersService.getUserByEmail(email).getId());
+		}
+
+		
+		return"redirect:/user/list";
 	}
 	
 	@RequestMapping(value ="/login",method =RequestMethod.GET)

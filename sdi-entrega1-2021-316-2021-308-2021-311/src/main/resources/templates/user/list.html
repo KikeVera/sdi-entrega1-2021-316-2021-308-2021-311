@@ -19,27 +19,33 @@
   		$("#tableUsers").load('/user/list/update');
   	});
   </script>                                                                                         
-  <div class="table-responsive">          
-  <table class="table table-hover" th:fragment="tableUsers" id="tableUsers">
-    <thead>
-      <tr>
-        <th >Email</th>
-        <th th:text="#{nombre.title}"></th>
-        <th th:text="#{apellidos.title}"></th>
-		<th class="col-md-1"> </th>
-		<th class="col-md-1"> </th>
+  <div class="table-responsive">
+  <form class="form-horizontal" method="post" action="/user/delete" >          
+ 	 <table class="table table-hover" th:fragment="tableUsers" id="tableUsers">
+   	 <thead>
+      	<tr>
+       	 <th >Email</th>
+       	 <th th:text="#{nombre.title}"></th>
+        	<th th:text="#{apellidos.title}"></th>
+        	<th th:text="#{checkbox.select}"></th>
+			<th class="col-md-1"> </th>
+			<th class="col-md-1"> </th>
+			
 		
-      </tr>
-    </thead>
-	<tbody>
-	  <tr th:each="user : ${usersList}">
-	    <td th:text="${user.email}"></td>
+     	 </tr>
+    	</thead>
+		<tbody>
+	  	<tr th:each="user : ${usersList}">
+	   	<td th:text="${user.email}"></td>
 	    <td th:text="${user.name}"></td>
 	    <td th:text="${user.lastName}"></td>
+	    <td  th:if="${user.role=='ROLE_USER'}"><input type="checkbox" name="checkboxUser" th:value="${user.email}" /></td>
 	    
-	  </tr>
-	</tbody>
-  </table>
+	  	</tr>
+		</tbody>
+  	</table>
+   <button type="submit" class="btn btn-primary"><span th:text="#{users.delete.submit}"></span></button>
+  	</form>
   </div>
 </div>
 
