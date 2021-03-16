@@ -35,16 +35,17 @@
      	 </tr>
     	</thead>
 		<tbody>
-	  	<tr th:each="user : ${usersList}">
+	  	<tr th:each="user : ${usersList}" th:if="${user.role=='ROLE_USER'}">
+	  	
 	   	<td th:text="${user.email}"></td>
 	    <td th:text="${user.name}"></td>
 	    <td th:text="${user.lastName}"></td>
-	    <td  th:if="${user.role=='ROLE_USER'}"><input type="checkbox" name="checkboxUser" th:value="${user.email}" /></td>
+	    <td  ><input type="checkbox" name="checkboxUser" th:value="${user.email}" /></td>
 	    
 	  	</tr>
 		</tbody>
   	</table>
-   <button type="submit" class="btn btn-primary"><span th:text="#{users.delete.submit}"></span></button>
+   <button type="submit" id="btEliminar" class="btn btn-primary"><span th:text="#{users.delete.submit}"></span></button>
   	</form>
   </div>
 </div>
