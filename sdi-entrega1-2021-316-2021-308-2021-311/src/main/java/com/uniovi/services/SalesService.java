@@ -1,10 +1,15 @@
 package com.uniovi.services;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+
 
 import com.uniovi.entities.Sale;
 import com.uniovi.entities.User;
@@ -43,5 +48,22 @@ public class SalesService {
 	public List<Sale> searchSalesByTitleAndUser (String searchText,User user){
 		searchText = "%"+searchText+"%";
 		return salesRepository.searchSalesByTitleAndUser(searchText,user);
-		}
+	}
+	
+	
+	public Page<Sale> getShoppingForUser(Pageable pageable,User user){
+		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
+		
+		sales= salesRepository.searchByShoppingToUser(pageable, user);
+		
+		return sales;
+	}
+	
+	public Page<Sale> getShoppingForUser(Pageable pageable,String searchtext, User user){
+		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
+		searchtext = "%"+searchtext+"%";
+		sales= salesRepository.searchByTitleAndShoppingToUser(pageable, searchtext, user);
+		
+		return sales;
+	}
 }

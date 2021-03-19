@@ -15,7 +15,7 @@ import javax.persistence.Table;
 public class Sale {
 	
 	private enum SALESTATE{
-		AVAILABLE
+		AVAILABLE, SOLD,OUTSTANDING
 	}
 	@Id
 	@GeneratedValue

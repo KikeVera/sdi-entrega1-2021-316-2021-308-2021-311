@@ -1,9 +1,14 @@
 package com.uniovi.controllers;
 
+
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -14,6 +19,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+
 
 import com.uniovi.entities.Sale;
 import com.uniovi.entities.User;
@@ -80,5 +86,28 @@ public class SalesController {
 			salesService.deleteSale(id);
 		}
 		return "redirect:/sale/list";
+	}
+	
+	
+	
+
+	@RequestMapping("/sale/shopping")
+	public String getList(Model model,Pageable pageable, 
+			@RequestParam(value = "", required = false) String searchText) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
+		
+		if(searchText==null || searchText.isEmpty()) {
+			sales=salesService.getShoppingForUser(pageable, user);
+		}
+		
+		else {
+			sales=salesService.getShoppingForUser(pageable, searchText, user);
+		}
+		model.addAttribute("userSales",sales.getContent());
+		model.addAttribute("page", sales);
+		return "sale/shopping";
 	}
 }

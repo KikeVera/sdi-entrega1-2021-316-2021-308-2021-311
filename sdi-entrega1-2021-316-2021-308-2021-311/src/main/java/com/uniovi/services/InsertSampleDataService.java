@@ -70,15 +70,53 @@ public class InsertSampleDataService {
 		usersService.addUser(user8);
 		
 		
-		Sale sale1 = new Sale("Mi oferta1", "mi descripcion 1", 1, user1);
-		Sale sale2 = new Sale("Mi oferta2", "mi descripcion 2", 2, user2);
-		Sale sale3 = new Sale("Mi oferta3", "mi descripcion 3", 3, user3);
-		Sale sale4 = new Sale("Mi oferta4", "mi descripcion 4", 4, user4);
+		Sale sale1 = new Sale("Bici de montaña", "Bici de degunda mano", 200.50, user1);
+		Sale sale2 = new Sale("Bici de carretera", "Bici de degunda mano", 300, user2);
+		Sale sale3 = new Sale("Ordenador portatil HP", "Portatil", 400, user3);
+		Sale sale4 = new Sale("Ordenador de sobremesa", "PC viejo", 150, user4);
+		Sale sale5 = new Sale("Nevera con congelador", "Nevera", 80, user5);
+		Sale sale6 = new Sale("Ruedas de bici", "Ruedas de bici antipinchazo", 30, user6);
+		Sale sale7 = new Sale("Juego de mesa", "Juego de mesa del monoply", 150, user7);
+		Sale sale8 = new Sale("Mesa de salón", "Mesa de roble", 50.25, user1);
+		Sale sale9 = new Sale("Telescopio", "Telescopio", 200, user2);
+		Sale sale10 = new Sale("Gafas de buceo", "Gafas de buceo", 10, user3);
+		Sale sale11 = new Sale("Gafas de cerca", "Gafas para leer de cerca", 50, user4);
+		Sale sale12 = new Sale("Gafas de sol", "Gafas", 30, user5);
+		Sale sale13 = new Sale("Desbrozadora", "Desbrozadora", 95.5, user6);
+		Sale sale14 = new Sale("Barco de playmobil", "Barco pirata de playmovil", 60, user7);
+		Sale sale15 = new Sale("Barco de pesca", "Barco de pesca como nuevo", 20000, user1);
+		Sale sale16= new Sale("Gato hidraulico", "Gato hidraulico", 44.5, user2);
+		Sale sale17 = new Sale("Rascador para gatos", "Rascador", 15, user3);
+		Sale sale18 = new Sale("Castillo para gatos", "Castillo grande para gatos", 100, user4);
+		Sale sale19 = new Sale("Coche de playmobil", "Coche de policia de playmobil", 27.8, user5);
+		Sale sale20 = new Sale("Helicoptero de playmobil", "Desbrozadora", 40.5, user6);
+		Sale sale21 = new Sale("Helicoptero", "Helicoptero", 135000, user7);
+
 		
 		salesService.addSale(sale1);
 		salesService.addSale(sale2);
 		salesService.addSale(sale3);
 		salesService.addSale(sale4);
+		salesService.addSale(sale5);
+		salesService.addSale(sale6);
+		salesService.addSale(sale7);
+		salesService.addSale(sale8);
+		salesService.addSale(sale9);
+		salesService.addSale(sale10);
+		salesService.addSale(sale11);
+		salesService.addSale(sale12);
+		salesService.addSale(sale13);
+		salesService.addSale(sale14);
+		salesService.addSale(sale15);
+		salesService.addSale(sale16);
+		salesService.addSale(sale17);
+		salesService.addSale(sale18);
+		salesService.addSale(sale19);
+		salesService.addSale(sale20);
+		salesService.addSale(sale21);
+		
+		
+		
 		
 		
 	}
