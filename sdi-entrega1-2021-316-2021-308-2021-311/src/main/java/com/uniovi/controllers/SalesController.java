@@ -1,5 +1,8 @@
 package com.uniovi.controllers;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +13,7 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.uniovi.entities.Sale;
 import com.uniovi.entities.User;
@@ -30,12 +34,18 @@ public class SalesController {
 	private AddSaleValidator addSaleValidator;
 
 	@RequestMapping("/sale/list")
-	public String getList(Model model) {
+	public String getList(Model model,@RequestParam(value = "",required=false) String searchText) {
 
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
-		model.addAttribute("salesList", salesService.getSaleByUser(user));
+		List<Sale> userSales = new ArrayList<Sale>();
+		if(searchText != null && !searchText.isEmpty()) {
+			userSales = salesService.searchSalesByTitleAndUser(searchText,user);
+		}else {
+			userSales = salesService.getSaleByUser(user);
+		}
+		model.addAttribute("userSales", userSales);
 		return "sale/list";
 	}
 
@@ -45,6 +55,10 @@ public class SalesController {
 		if (errors.hasErrors()) {
 			return "sale/add";
 		}
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		sale.setUser(user);
 		salesService.addSale(sale);
 		return "redirect:/sale/list";
 	}

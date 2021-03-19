@@ -2,6 +2,7 @@ package com.uniovi.entities;
 
 import java.time.LocalDate;
 
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
@@ -13,6 +14,9 @@ import javax.persistence.Table;
 @Table(name = "sale")
 public class Sale {
 	
+	private enum SALESTATE{
+		AVAILABLE
+	}
 	@Id
 	@GeneratedValue
 	private long id;
@@ -20,6 +24,7 @@ public class Sale {
 	private String description;
 	private LocalDate date;
 	private double cost;
+	private SALESTATE state;
 	
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -36,6 +41,7 @@ public class Sale {
 		this.date = LocalDate.now();
 		this.cost = cost;
 		this.user = user;
+		this.state =SALESTATE.AVAILABLE;
 	}
 	
 	public long getId() {
@@ -79,5 +85,9 @@ public class Sale {
 
 	public void setUser(User user) {
 		this.user = user;
+	}
+
+	public SALESTATE getState() {
+		return state;
 	}
 }
