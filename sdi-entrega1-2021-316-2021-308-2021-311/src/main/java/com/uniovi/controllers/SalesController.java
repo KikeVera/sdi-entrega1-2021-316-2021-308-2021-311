@@ -39,6 +39,7 @@ public class SalesController {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
+		
 		List<Sale> userSales = new ArrayList<Sale>();
 		if(searchText != null && !searchText.isEmpty()) {
 			userSales = salesService.searchSalesByTitleAndUser(searchText,user);
@@ -71,7 +72,13 @@ public class SalesController {
 
 	@RequestMapping("/sale/delete/{id}")
 	public String deleteSales(@PathVariable Long id) {
-		salesService.deleteSale(id);
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		
+		if(salesService.getSale(id).getUser().getEmail().equals(email)) {
+			salesService.deleteSale(id);
+		}
 		return "redirect:/sale/list";
 	}
 }

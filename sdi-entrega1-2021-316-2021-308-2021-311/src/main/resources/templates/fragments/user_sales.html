@@ -6,6 +6,8 @@
 						<th class="col-md-1"></th>
 						<th class="col-md-1"></th>
 						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
 					</tr>
 				</thead>
 				<tbody>
@@ -13,6 +15,8 @@
 						<td th:text="${sale.title}">Title</td>
 						<td th:text="${sale.description}">Descripcion</td>
 						<td th:text="${sale.cost}">10</td>
+						<td><a th:href="${'/sale/delete/' + sale.id}"><span
+								th:text="#{sale.delete.submit}">Eliminar Oferta</span></a></td>
 					</tr>
 				</tbody>
 			</table>
