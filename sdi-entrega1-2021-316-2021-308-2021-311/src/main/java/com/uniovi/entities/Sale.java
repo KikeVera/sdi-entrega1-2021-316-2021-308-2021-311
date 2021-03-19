@@ -96,10 +96,19 @@ public class Sale {
 		return state;
 	}
 
+
 	public void setState(SALESTATE state) {
 		this.state = state;
 	}
 	
 	
+
+
+	public void bought() {
+		this.state=SALESTATE.SOLD;
+	}
+	public boolean wasBought() {
+		return state == SALESTATE.SOLD;
+	}
 
 }

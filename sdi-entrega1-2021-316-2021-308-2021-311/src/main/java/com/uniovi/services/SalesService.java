@@ -14,12 +14,15 @@ import org.springframework.stereotype.Service;
 import com.uniovi.entities.Sale;
 import com.uniovi.entities.User;
 import com.uniovi.repositories.SalesRepository;
+import com.uniovi.repositories.UsersRepository;
 
 @Service
 public class SalesService {
 
 	@Autowired
 	private SalesRepository salesRepository;
+	@Autowired
+	private UsersRepository userRepository;
 
 	public List<Sale> getSales() {
 		List<Sale> sales = new ArrayList<Sale>();
@@ -65,5 +68,16 @@ public class SalesService {
 		sales= salesRepository.searchByTitleAndShoppingToUser(pageable, searchtext, user);
 		
 		return sales;
+	}
+
+	public boolean buy(User user, Sale sale) {
+		if(user.getMoney() - sale.getCost()>=0 && !sale.wasBought()) {
+			user.setMoney(user.getMoney() - sale.getCost());
+			sale.bought();
+			salesRepository.save(sale);
+			userRepository.save(user);
+			return true;
+		}
+		return false;
 	}
 }
