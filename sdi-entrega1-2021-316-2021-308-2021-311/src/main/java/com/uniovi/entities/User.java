@@ -3,11 +3,14 @@ package com.uniovi.entities;
 
 
 
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Transient;
 
@@ -28,8 +31,10 @@ public class User {
 	private String password;
 	@Transient
 	private String passwordConfirm;
-
 	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private Set<Sale> sales;
+
 	public User() {
 		
 	}
@@ -104,8 +109,13 @@ public class User {
 		this.money = money;
 	}
 	
-	
+	public Set<Sale> getSales() {
+		return sales;
+	}
 
+	public void setSales(Set<Sale> sales) {
+		this.sales = sales;
+	}
 	
 	
 	
