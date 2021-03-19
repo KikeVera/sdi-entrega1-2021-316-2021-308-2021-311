@@ -1,4 +1,4 @@
-@CHARSET "ISO-8859-1";
+@CHARSET "utf-8";
 
 /* Sticky footer styles-------------------------------------------------- */
 html {
@@ -22,3 +22,8 @@ footer {
 }
 
 /* Sticky footer styles-------------------------------------------------- */
+
+tr.outstanding{
+	
+ background-color:#D3D3D3 ; 
+}

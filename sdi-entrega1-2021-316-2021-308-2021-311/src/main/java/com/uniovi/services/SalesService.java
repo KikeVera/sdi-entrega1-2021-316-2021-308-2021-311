@@ -47,7 +47,7 @@ public class SalesService {
 	
 	public List<Sale> searchSalesByTitleAndUser (String searchText,User user){
 		searchText = "%"+searchText+"%";
-		return salesRepository.searchSalesByTitleAndUser(searchText,user);
+		return salesRepository.searchSalesByTitleAndUser(searchText,user,"OUTSTANDING");
 	}
 	
 	

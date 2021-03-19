@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 
 import com.uniovi.entities.Sale;
+import com.uniovi.entities.Sale.SALESTATE;
 import com.uniovi.entities.User;
 import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
@@ -57,7 +58,8 @@ public class SalesController {
 	}
 
 	@RequestMapping(value = "/sale/add", method = RequestMethod.POST)
-	public String setSales(@Validated Sale sale, BindingResult errors) {
+	public String setSales(@Validated Sale sale, BindingResult errors,
+			@RequestParam(value = "checkbox", required = false) String checkbox) {
 		addSaleValidator.validate(sale, errors);
 		if (errors.hasErrors()) {
 			return "sale/add";
@@ -66,6 +68,9 @@ public class SalesController {
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
 		sale.setUser(user);
+		if(checkbox!=null) {
+			sale.setState(SALESTATE.OUTSTANDING);
+		}
 		salesService.addSale(sale);
 		return "redirect:/sale/list";
 	}
@@ -98,6 +103,7 @@ public class SalesController {
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
 		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
+		
 		
 		if(searchText==null || searchText.isEmpty()) {
 			sales=salesService.getShoppingForUser(pageable, user);
