@@ -4,12 +4,10 @@ package com.uniovi.controllers;
 
 import java.util.List;
 
-
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 
-import org.springframework.security.core.context.SecurityContextHolder;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,6 +44,9 @@ public class UsersController {
 	
 	@Autowired
 	private RolesService rolesService;
+	
+	@Autowired
+	private HttpSession httpSession;
 	
 	@RequestMapping("/user/list")
 	public String getList(Model model){
@@ -89,6 +90,7 @@ public class UsersController {
 			return"login";
 		}
 		
+		httpSession.setAttribute("user",usersService.getUserByEmail(user.getEmail()));
 		securityService.autoLogin(user.getEmail(),user.getPassword());
 		return"redirect:/home";
 		
@@ -115,6 +117,7 @@ public class UsersController {
 		user.setMoney(INITMONEY);
 		usersService.addUser(user);
 		securityService.autoLogin(user.getEmail(),user.getPasswordConfirm());
+		httpSession.setAttribute("user",user);
 		return"redirect:/home";
 	}
 	
@@ -122,10 +125,7 @@ public class UsersController {
 	
 	@RequestMapping(value ={"/home"},method =RequestMethod.GET)
 	public String home(Model model){
-		Authentication auth =SecurityContextHolder.getContext().getAuthentication();
-		String email =auth.getName();
-		User activeUser =usersService.getUserByEmail(email);
-		model.addAttribute("user",activeUser);
+	
 		return "home";
 	}
 	
