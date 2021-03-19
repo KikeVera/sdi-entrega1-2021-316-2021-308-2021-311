@@ -18,14 +18,14 @@
 		
 			</ul>
        </li>
-			<li sec:authorize="isAuthenticated()" id="sale-menu" class="dropdown"><a
+			<li sec:authorize="hasRole('ROLE_USER')" id="sale-menu" class="dropdown"><a
 					class="dropdown-toggle" data-toggle="dropdown" href="#"> <span
 						th:text="#{sale.message}">Ofertas</span><span
 						class="caret"></span>
 				</a>
 					<ul class="dropdown-menu">
 						<li><a href="/sale/add"><span th:text="#{sale.add}">Nueva Oferta</span></a></li>
-						<li><a href="/sale/list"><span th:text="#{sale.add}">Mis Ofertas</span></a></li>
+						<li><a href="/sale/list"><span th:text="#{sale.list}">Mis Ofertas</span></a></li>
 					</ul></li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
