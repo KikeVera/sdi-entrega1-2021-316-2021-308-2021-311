@@ -21,8 +21,8 @@ public class SeleniumUtils {
 	 */
 	static public void textoPresentePagina(WebDriver driver, String texto)
 	{
-		List<WebElement> list = driver.findElements(By.xpath("//*[contains(text(),'" + texto + "')]"));		
-		assertTrue("Texto " + texto + " no localizado!", list.size() > 0);			
+		List<WebElement> list = driver.findElements(By.xpath("//*[contains(text(),'" + texto + "')]"));
+		assertTrue("Texto " + texto + " no localizado!", list.size() > 0);
 	}
 
 	/**
@@ -32,8 +32,8 @@ public class SeleniumUtils {
 	 */
 	static public void textoNoPresentePagina(WebDriver driver, String texto)
 	{
-		List<WebElement> list = driver.findElements(By.xpath("//*[contains(text(),'" + texto + "')]"));		
-		assertTrue("Texto " + texto + " aun presente !", list.size() == 0);			
+		List<WebElement> list = driver.findElements(By.xpath("//*[contains(text(),'" + texto + "')]"));
+		assertTrue("Texto " + texto + " aun presente !", list.size() == 0);
 	}
 
 	/**
