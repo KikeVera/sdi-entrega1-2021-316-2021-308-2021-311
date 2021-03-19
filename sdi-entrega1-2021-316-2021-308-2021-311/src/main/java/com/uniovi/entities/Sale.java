@@ -90,4 +90,11 @@ public class Sale {
 	public SALESTATE getState() {
 		return state;
 	}
+
+	public void bought() {
+		this.state=SALESTATE.SOLD;
+	}
+	public boolean wasBought() {
+		return state == SALESTATE.SOLD;
+	}
 }

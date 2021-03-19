@@ -110,4 +110,21 @@ public class SalesController {
 		model.addAttribute("page", sales);
 		return "sale/shopping";
 	}
+	
+	
+	@RequestMapping("/sale/buy/{id}")
+	public String getBuy(Model model,@PathVariable Long id) {
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		Sale sale = salesService.getSale(id);
+		if(salesService.buy(user,sale)) {
+			return "redirect:/sale/shopping";
+		}
+		
+		model.addAttribute("sale", sale);
+		model.addAttribute("user", user);
+		
+		return "/error/insuficientMoney";
+	}
 }
