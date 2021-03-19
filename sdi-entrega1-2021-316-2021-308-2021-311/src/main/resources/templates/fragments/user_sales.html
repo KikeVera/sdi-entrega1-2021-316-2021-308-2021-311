@@ -1,0 +1,19 @@
+<div class="table-responsive">
+			<table class="table table-hover"
+				id="userSales">
+				<thead>
+					<tr>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="sale : ${userSales}">
+						<td th:text="${sale.title}">Title</td>
+						<td th:text="${sale.description}">Descripcion</td>
+						<td th:text="${sale.cost}">10</td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
