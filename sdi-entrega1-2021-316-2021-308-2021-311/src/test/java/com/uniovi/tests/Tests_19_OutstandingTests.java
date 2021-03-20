@@ -11,7 +11,7 @@ import java.util.List;
 
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -31,7 +31,7 @@ import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_SaleView;
 import com.uniovi.tests.pageobjects.PO_View;
-import com.uniovi.tests.util.SeleniumUtils;
+
 
 import org.junit.runners.MethodSorters;
 
@@ -141,50 +141,96 @@ public class Tests_19_OutstandingTests {
 		
 
 	}
-	
-	//PR22.Hacer una búsqueda escribiendo en el campo un texto que no exista y comprobar que se
-	//muestra la página que corresponde, con la lista de ofertas vacía.
+
+	// PR37. Sobre el listado de ofertas de un usuario con menos de 20 euros de
+	// saldo, pinchar en elenlace Destacada y a continuación comprobar: que aparece
+	// en el listado de ofertas destacadas para los usuarios y que el saldo del
+	// usuario se actualiza adecuadamente en la vista del ofertante (-20).
 	@Test
-	public void PR37()  {
+	public void PR37() {
 		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 
 		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
-				PO_Properties.getSPANISH());
+					PO_Properties.getSPANISH());
 
-
-		// Pinchamos en la opción de ir de compras: //a[contains(@href,
-		// 'user/list')]
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
-	
-		elementos.get(0).click();
-		
-		
-		
-		//Escribimos en el buscador un texto que no contiene ningun titulo de ninguna oferta
-		WebElement buscador = driver.findElement(By.name("searchText"));
-		buscador.click();
-		buscador.clear();
-		buscador.sendKeys("hhhhhhhhhhh");
-		//Hacemos click en buscar
-		elementos =PO_View.checkKey(driver, "find.submit", PO_Properties.getSPANISH());
-		
-		elementos.get(0).click();
-		
-		
-	
-		
-		//Recorremos todas las ofertas en el sistema
-		for (Sale sale : salesService.getSales()) {
-			//Comprobamos que no existan
-			SeleniumUtils.textoNoPresentePagina( driver, sale.getTitle());
+			// Pinchamos en la opción de menu de Ofertas: //li[contains(@id, 'sale-menu')]/a
+			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
+			elementos.get(0).click();
+					
+			// Esperamos a aparezca la opción de añadir ofertas: //a[contains(@href,
+			// 'sale/list')]
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/list')]");
+			// Pinchamos en listar usuarios.
+			elementos.get(0).click();
 			
+			Double money=usersService.getUserByEmail("PedroDiaz@gmail.com").getMoney();
+			//Comprobamos que se muestre el dinero del usuario
+			PO_View.checkElement(driver, "free", "//p/b[contains(text(), '"+money+"')]");
 			
+			//Obtenemos el titulo de la oferta que podemos destacar
 			
+			String title = PO_View.checkElement(driver, "free",
+					"//td[contains(a/@href, '/sale/highlight')]/preceding-sibling::*[4]").get(0).getText();
+			
+			//Hacemos click en el enlace
+			
+			PO_View.checkElement(driver, "free",
+					"//td/a[contains(@href, '/sale/highlight')]").get(0).click();	
+			
+			//Comprobamos que se muestre el dinero del usuario -20 euros
+			PO_View.checkElement(driver, "free", "//p/b[contains(text(), '"+(money-20)+"')]");
+			
+			// Pinchamos en la opción de ir de compras: //a[contains(@href,
+				// 'sale/shopping')]
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
+			
+			elementos.get(0).click();
+			
+			//Comprobamos que la oferta destacada
+			elementos = PO_View.checkElement(driver, "free",
+					"//td[text()= '"+title+"']/following-sibling::td[text()='DESTACADA']");
+				
+			
+		
 		}
+	
+	@Test
+	public void PR38() {
+		// Sobre el listado de ofertas de un usuario con menos de 20 euros de saldo,
+		// pinchar en el enlace Destacada y a continuación comprobar que se muestra el
+		// mensaje de saldo no suficiente.
+		usersService.updateMoney(usersService.getUserByEmail("PedroDiaz@gmail.com"), -85);
+		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
+					PO_Properties.getSPANISH());
+		
+			
 
-
-	}
+			// Pinchamos en la opción de menu de Ofertas: //li[contains(@id, 'sale-menu')]/a
+			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
+			elementos.get(0).click();
+					
+			// Esperamos a aparezca la opción de añadir ofertas: //a[contains(@href,
+			// 'sale/list')]
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/list')]");
+			// Pinchamos en listar usuarios.
+			elementos.get(0).click();
+			
+			
+			
+			//Hacemos click en el enlace
+			
+			PO_View.checkElement(driver, "free",
+					"//td/a[contains(@href, '/sale/highlight')]").get(0).click();	
+			//Comprobamos que hay un mensaje de error al no tener dinero
+			
+			PO_View.checkKey(driver,"Error.sale.money" , PO_Properties.getSPANISH());
+		
+		
+			
+		
+		}
+		
 	
 	public void init() {
 		usersRepository.deleteAll();
