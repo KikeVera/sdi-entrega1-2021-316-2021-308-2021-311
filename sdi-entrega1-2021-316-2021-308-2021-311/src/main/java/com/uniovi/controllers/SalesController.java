@@ -137,21 +137,25 @@ public class SalesController {
 	
 	
 	@RequestMapping("/sale/buy/{id}")
-	public String getBuy(Model model,@PathVariable Long id) {
+	public String getBuy(@PathVariable Long id,RedirectAttributes redAtributes) {
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
 		Sale sale = salesService.getSale(id);
-		if(salesService.buy(user,sale)) {
-			httpSession.setAttribute("user",usersService.getUserByEmail(email));
+		
+		if(sale.getUser().getEmail().equals(user.getEmail())) {
+			redAtributes.addFlashAttribute("error1", "");
+			if(!sale.isAvailable()) {
+				redAtributes.addFlashAttribute("error2", "");
+			}
 			return "redirect:/sale/shopping";
 		}
 		
-		model.addAttribute("sale", sale);
-		model.addAttribute("user", user);
-		
-		
-		return "/error/notEnoughMoney";
+		if(!salesService.buy(user,sale)) {
+			redAtributes.addFlashAttribute("error3", "");
+			return "redirect:/sale/shopping";
+		}
+		return "redirect:/sale/shopping";
 	}
 	
 	@RequestMapping("/sale/highlight/{id}")

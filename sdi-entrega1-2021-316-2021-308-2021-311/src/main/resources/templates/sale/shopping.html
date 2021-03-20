@@ -19,6 +19,10 @@
 			</div>
 			<button type="submit" class="btn btn-default"><span th:text="#{find.submit}"></span></button>
 		</form>
+		<div><span class="text-danger" th:if="${error1}" th:text="#{error.sale.invalidUser}"></span>
+			<span class="text-danger" th:if="${error2}" th:text="#{error.sale.notAvailable}"></span>
+			<span class="text-danger" th:if="${error3}" th:text="#{error.sale.insufficientMoney}"></span>
+		</div>
 		<div class="table-responsive">
 			<table class="table table-hover"
 				id="userSales">
