@@ -123,13 +123,14 @@ public class SalesController {
 		
 		
 		if(searchText==null || searchText.isEmpty()) {
-			sales=salesService.getShoppingForUser(pageable, user);
+			sales=salesService.getShopping(pageable);
 		}
 		
 		else {
-			sales=salesService.getShoppingForUser(pageable, searchText, user);
+			sales=salesService.getShopping(pageable, searchText);
 		}
 		model.addAttribute("userSales",sales.getContent());
+		model.addAttribute("user", user);
 		model.addAttribute("page", sales);
 		return "sale/shopping";
 	}

@@ -54,18 +54,18 @@ public class SalesService {
 	}
 	
 	
-	public Page<Sale> getShoppingForUser(Pageable pageable,User user){
+	public Page<Sale> getShopping(Pageable pageable){
 		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
 		
-		sales= salesRepository.searchByShoppingToUser(pageable, user);
+		sales= salesRepository.searchShopping(pageable);
 		
 		return sales;
 	}
 	
-	public Page<Sale> getShoppingForUser(Pageable pageable,String searchtext, User user){
+	public Page<Sale> getShopping(Pageable pageable,String searchtext){
 		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
 		searchtext = "%"+searchtext+"%";
-		sales= salesRepository.searchByTitleAndShoppingToUser(pageable, searchtext, user);
+		sales= salesRepository.searchShoppingByTitle(pageable, searchtext);
 		
 		return sales;
 	}
