@@ -74,6 +74,7 @@ public class SalesService {
 		if(user.getMoney() - sale.getCost()>=0 && sale.isAvailable()) {
 			user.setMoney(user.getMoney() - sale.getCost());
 			sale.setAvailable(false);
+			sale.setBuyer(user);
 			salesRepository.save(sale);
 			userRepository.save(user);
 			return true;
@@ -93,5 +94,11 @@ public class SalesService {
 		salesRepository.save(sale);
 		
 		
+	}
+
+	public List<Sale> getUserBuys(User user) {
+		List<Sale> sales = new ArrayList<Sale>();
+		salesRepository.findAllByBuyer(user).forEach(sales::add);
+		return sales;
 	}
 }

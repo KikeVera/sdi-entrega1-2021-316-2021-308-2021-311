@@ -26,6 +26,7 @@
 					<ul class="dropdown-menu">
 						<li><a href="/sale/add"><span th:text="#{sale.add}">Nueva Oferta</span></a></li>
 						<li><a href="/sale/list"><span th:text="#{sale.list}">Mis Ofertas</span></a></li>
+						<li><a href="/sale/user/buys"><span th:text="#{sale.userBuys.title}">Ofertas Compradas</span></a></li>
 					</ul></li>
 				<li sec:authorize="hasRole('ROLE_USER')" class="active"><a href="/sale/shopping"><span th:text="#{shopping.message}"></span></a></li>
 				

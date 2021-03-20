@@ -28,6 +28,10 @@ public class Sale {
 	@ManyToOne
 	@JoinColumn(name = "user_id")
 	private User user;
+	
+	@ManyToOne
+	@JoinColumn(name = "buyer_id")
+	private User buyer;
 
 	public Sale() {
 
@@ -106,6 +110,14 @@ public class Sale {
 
 	public void setOutstanding(boolean outstanding) {
 		this.outstanding = outstanding;
+	}
+
+	public User getBuyer() {
+		return buyer;
+	}
+
+	public void setBuyer(User buyer) {
+		this.buyer = buyer;
 	}
 	
 	

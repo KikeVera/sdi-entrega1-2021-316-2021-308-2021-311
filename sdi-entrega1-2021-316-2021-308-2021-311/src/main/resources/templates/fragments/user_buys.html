@@ -6,22 +6,17 @@
 						<th th:text="#{sale.add.saleTitle}" class="col-md-1"></th>
 						<th th:text="#{sale.add.saleDescription}" class="col-md-1"></th>
 						<th th:text="#{sale.add.saleCost}" class="col-md-1"></th>
-						<th class="col-md-1"></th>
+						<th th:text="#{sale.userBuys.seller}" class="col-md-1"></th>
 						<th class="col-md-1"></th>
 					</tr>
 				</thead>
 				<tbody>
-					<tr th:each="sale : ${userSales}">
+					<tr th:each="sale : ${userBuys}">
 						<td th:text="${sale.title}">Title</td>
 						<td th:text="${sale.description}">Descripcion</td>
 						<td th:text="${sale.cost}">10</td>
-						<td><a th:href="${'/sale/delete/' + sale.id}"><span
-								th:text="#{sale.delete.submit}">Eliminar Oferta</span></a></td>
-								
-						<td th:unless="${sale.outstanding}"><a th:href="${'/sale/highlight/' + sale.id}"><span
-								th:text="#{sale.highlight.submit}">Destacar</span></a></td>
-						<td th:if="${sale.outstanding}==true"><a th:href="${'/sale/unhighlight/' + sale.id}"><span
-								th:text="#{sale.unhighlight.submit}">No destacar</span></a></td>
+						<td th:text="${sale.user.email}">user</td>
+
 					</tr>
 				</tbody>
 			</table>

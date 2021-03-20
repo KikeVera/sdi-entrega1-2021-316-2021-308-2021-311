@@ -194,4 +194,14 @@ public class SalesController {
 		
 		return "redirect:/sale/list";
 	}
+	@RequestMapping("/sale/user/buys")
+	public String getList(Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		model.addAttribute("userBuys", salesService.getUserBuys(user));
+		
+		return "user/userBuysList";
+	}
 }

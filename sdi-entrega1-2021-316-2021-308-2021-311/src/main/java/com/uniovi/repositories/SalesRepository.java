@@ -24,4 +24,6 @@ public interface SalesRepository extends CrudRepository<Sale, Long>{
 	@Query("SELECT s FROM Sale s WHERE (LOWER(s.title) LIKE LOWER (?1) ) ORDER BY s.outstanding desc ")
 	Page<Sale> searchShoppingByTitle(Pageable pageable, String searchtext);
 
+	Iterable<Sale> findAllByBuyer(User buyer);
+
 }
