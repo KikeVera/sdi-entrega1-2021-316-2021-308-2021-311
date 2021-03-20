@@ -33,7 +33,7 @@ import com.uniovi.tests.util.SeleniumUtils;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_7_OwnOffersListTests {
+public class Tests_11_BuyOffersTests {
 	@Autowired
 	private UsersService usersService;
 	@Autowired
@@ -80,10 +80,10 @@ public class Tests_7_OwnOffersListTests {
 		driver.quit();
 	}
 
-	// PR18. Mostrar el listado de ofertas para dicho usuario y comprobar que se
-	// muestran todas las ofertas que existen
+	// PR16. Ir a la opción de ofertas compradas del usuario y mostrar la lista. Comprobar que aparecen
+	//las ofertas que deben aparecer
 	@Test
-	public void PR18() {
+	public void PR26() {
 		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 
@@ -94,22 +94,20 @@ public class Tests_7_OwnOffersListTests {
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
 		elementos.get(0).click();
 
-		// Esperamos a aparezca la opción de listar nuestras ofertas:
+		// Esperamos a aparezca la opción de listar nuestras ofertas compradas:
 		// //a[contains(@href,
-		// '/sale/list')]
-		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/list')]");
-		// Pinchamos en listar ofertas de usuario.
+		// '/sale/user/buys')]
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/user/buys')]");
+		// Pinchamos en listar ofertas compradas.
 		elementos.get(0).click();
 
 		// Contamos el número de filas de ofertas
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
-		assertTrue(elementos.size() == 3);
+		assertTrue(elementos.size() == 2);
 
-		// Comprobamos que las ofertas agregadas al usuario aparecen todas
-		PO_View.checkElement(driver, "text", "Bici de montaña");
-		PO_View.checkElement(driver, "text", "Mesa de salón");
-		PO_View.checkElement(driver, "text", "Barco de pesca");
-
+		// Comprobamos que aparenen las ofertas que deben aparecer
+		PO_View.checkElement(driver, "text", "Rascador para gatos");
+		PO_View.checkElement(driver, "text", "Castillo para gatos");
 		// Cerrar sesion
 		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
 	}
@@ -159,7 +157,7 @@ public class Tests_7_OwnOffersListTests {
 		usersService.addUser(user8);
 
 		Sale sale1 = new Sale("Bici de montaña", "Bici de degunda mano", 200.50, user1);
-		Sale sale2 = new Sale("Bici de carretera", "Bici de degunda mano", 300, user2);
+		Sale sale2 = new Sale("Bici de carretera", "Bici de segunda mano", 300, user2);
 		Sale sale3 = new Sale("Ordenador portatil HP", "Portatil", 400, user3);
 		Sale sale4 = new Sale("Ordenador de sobremesa", "PC viejo", 150, user4);
 		Sale sale5 = new Sale("Nevera con congelador", "Nevera", 80, user5);
@@ -183,6 +181,10 @@ public class Tests_7_OwnOffersListTests {
 		sale3.setOutstanding(true);
 		sale15.setOutstanding(true);
 		sale21.setOutstanding(true);
+		sale17.setBuyer(user1);
+		sale17.setAvailable(false);
+		sale18.setBuyer(user1);
+		sale18.setAvailable(false);
 
 		salesService.addSale(sale1);
 		salesService.addSale(sale2);

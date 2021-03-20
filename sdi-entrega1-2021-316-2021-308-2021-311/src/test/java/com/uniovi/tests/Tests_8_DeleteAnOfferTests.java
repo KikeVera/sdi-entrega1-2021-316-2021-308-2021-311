@@ -33,7 +33,7 @@ import com.uniovi.tests.util.SeleniumUtils;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Test_8_DeleteAnOfferTests {
+public class Tests_8_DeleteAnOfferTests {
 	@Autowired
 	private UsersService usersService;
 	@Autowired
@@ -94,7 +94,7 @@ public class Test_8_DeleteAnOfferTests {
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
 		elementos.get(0).click();
 
-		// Esperamos a aparezca la opción de agregar una nueva oferta:
+		// Esperamos a aparezca la opción de listar nuestras ofertas:
 		// //a[contains(@href,
 		// '/sale/list')]
 		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/list')]");
@@ -136,7 +136,7 @@ public class Test_8_DeleteAnOfferTests {
 			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
 			elementos.get(0).click();
 
-			// Esperamos a aparezca la opción de agregar una nueva oferta:
+			// Esperamos a aparezca la opción de listar nuestras ofertas:
 			// //a[contains(@href,
 			// '/sale/list')]
 			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/list')]");
@@ -147,10 +147,10 @@ public class Test_8_DeleteAnOfferTests {
 			elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
 			assertTrue(elementos.size() == 3);
 
-			//Obtenemos el enlace para eliminar la primera oferta
+			//Obtenemos el enlace para eliminar la ultima oferta
 			elementos = PO_View.checkElement(driver, "free", "//td[contains(text(), 'Bici de segunda mano')]/following-sibling::*/a[contains(@href, 'sale/delete')]");
 			
-			//Eliminamos la primera oferta
+			//Eliminamos la ultima oferta
 			elementos.get(0).click();
 			
 			// Contamos el número de filas de ofertas
