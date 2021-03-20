@@ -71,13 +71,27 @@ public class SalesService {
 	}
 
 	public boolean buy(User user, Sale sale) {
-		if(user.getMoney() - sale.getCost()>=0 && !sale.wasBought()) {
+		if(user.getMoney() - sale.getCost()>=0 && sale.isAvailable()) {
 			user.setMoney(user.getMoney() - sale.getCost());
-			sale.bought();
+			sale.setAvailable(false);
 			salesRepository.save(sale);
 			userRepository.save(user);
 			return true;
 		}
 		return false;
+	}
+	
+	public void highlight(Sale sale) {
+		sale.setOutstanding(true);
+		salesRepository.save(sale);
+		
+		
+	}
+	
+	public void unhighlight(Sale sale) {
+		sale.setOutstanding(false);
+		salesRepository.save(sale);
+		
+		
 	}
 }

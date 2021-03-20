@@ -4,6 +4,7 @@
 <body>
 
 	<nav th:replace="fragments/nav" />
+	<div sec:authorize="hasRole('ROLE_USER')" th:replace="fragments/money"/>
 
 
 
@@ -27,29 +28,36 @@
       					<th th:text="#{sale.add.saleDescription}"></th>
         				<th th:text="#{sale.add.saleCost}"></th>
 						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
 						
 					</tr>
 				</thead>
 				<tbody>
-					<tr class="outstanding"  th:each="sale : ${userSales}" th:if="${sale.state.name() == 'OUTSTANDING'}">
+				
+				
+					<tr class="outstanding" th:if="${sale.outstanding}" th:each="sale : ${userSales}" >
 						<td th:text="${sale.title}">Title</td>
 						<td th:text="${sale.description}">Descripcion</td>
 						<td th:text="${sale.cost}">10</td>
-						<td><a th:href="${'/sale/buy/' + sale.id}"><span
+						<td th:if="${sale.available}"><a th:href="${'/sale/buy/' + sale.id}"><span
 								th:text="#{sale.buy.submit}">Comprar</span></a></td>
 								
+						<td th:unless="${sale.available}"><span
+								th:text="#{sale.sold}">Vendido</span></td>
 						
+						<td th:text="#{outstanding.message}">10</td>
 					</tr>
+					
 				
-				
-					<tr  th:each="sale : ${userSales}" th:if="${sale.state.name() != 'OUTSTANDING'}">
+					
+					<tr th:unless="${sale.outstanding}"  th:each="sale : ${userSales}" >
 						<td th:text="${sale.title}">Title</td>
 						<td th:text="${sale.description}">Descripcion</td>
 						<td th:text="${sale.cost}">10</td>
-						<td th:if="${sale.state.name() == 'AVAILABLE'}"><a th:href="${'/sale/buy/' + sale.id}"><span
+						<td th:if="${sale.available}"><a th:href="${'/sale/buy/' + sale.id}"><span
 								th:text="#{sale.buy.submit}">Comprar</span></a></td>
 								
-						<td th:if="${sale.state.name() == 'SOLD'}"><span
+						<td th:unless="${sale.available}"><span
 								th:text="#{sale.sold}">Vendido</span></td>
 					</tr>
 				</tbody>

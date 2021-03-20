@@ -17,6 +17,11 @@
 						<td th:text="${sale.cost}">10</td>
 						<td><a th:href="${'/sale/delete/' + sale.id}"><span
 								th:text="#{sale.delete.submit}">Eliminar Oferta</span></a></td>
+								
+						<td th:unless="${sale.outstanding}"><a th:href="${'/sale/highlight/' + sale.id}"><span
+								th:text="#{sale.highlight.submit}">Destacar</span></a></td>
+						<td th:if="${sale.outstanding}==true"><a th:href="${'/sale/unhighlight/' + sale.id}"><span
+								th:text="#{sale.unhighlight.submit}">No destacar</span></a></td>
 					</tr>
 				</tbody>
 			</table>

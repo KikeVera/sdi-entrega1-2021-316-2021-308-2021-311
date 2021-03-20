@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -19,10 +21,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.uniovi.entities.Sale;
-import com.uniovi.entities.Sale.SALESTATE;
+
 import com.uniovi.entities.User;
 import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
@@ -39,6 +41,9 @@ public class SalesController {
 
 	@Autowired
 	private AddSaleValidator addSaleValidator;
+	
+	@Autowired
+	private HttpSession httpSession;
 
 	@RequestMapping("/sale/list")
 	public String getList(Model model,@RequestParam(value = "",required=false) String searchText) {
@@ -54,23 +59,35 @@ public class SalesController {
 			userSales = salesService.getSaleByUser(user);
 		}
 		model.addAttribute("userSales", userSales);
+		
+		
 		return "sale/list";
 	}
 
 	@RequestMapping(value = "/sale/add", method = RequestMethod.POST)
 	public String setSales(@Validated Sale sale, BindingResult errors,
 			@RequestParam(value = "checkbox", required = false) String checkbox) {
-		addSaleValidator.validate(sale, errors);
-		if (errors.hasErrors()) {
-			return "sale/add";
-		}
+		
+		
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
 		sale.setUser(user);
+		
 		if(checkbox!=null) {
-			sale.setState(SALESTATE.OUTSTANDING);
+			sale.setOutstanding(true);
 		}
+		addSaleValidator.validate(sale, errors);
+		if (errors.hasErrors()) {
+			return "sale/add";
+		}
+	
+		
+		if(sale.isOutstanding()) {
+			usersService.updateMoney(user, -20);
+			httpSession.setAttribute("user",usersService.getUserByEmail(email));
+		}
+		
 		salesService.addSale(sale);
 		return "redirect:/sale/list";
 	}
@@ -125,12 +142,55 @@ public class SalesController {
 		User user = usersService.getUserByEmail(email);
 		Sale sale = salesService.getSale(id);
 		if(salesService.buy(user,sale)) {
+			httpSession.setAttribute("user",usersService.getUserByEmail(email));
 			return "redirect:/sale/shopping";
 		}
 		
 		model.addAttribute("sale", sale);
 		model.addAttribute("user", user);
 		
-		return "/error/insuficientMoney";
+		
+		return "/error/notEnoughMoney";
+	}
+	
+	@RequestMapping("/sale/highlight/{id}")
+	public String highlight(@PathVariable Long id,RedirectAttributes redAtributes) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		
+		if(user.getMoney()<20) {
+			
+			redAtributes.addFlashAttribute("error", "");
+			return "redirect:/sale/list";
+		}
+		
+		Sale sale=salesService.getSale(id);
+		salesService.highlight(sale);
+		usersService.updateMoney(user, -20);
+		
+		httpSession.setAttribute("user",usersService.getUserByEmail(email));
+		
+		
+		return "redirect:/sale/list";
+	}
+	
+	@RequestMapping("/sale/unhighlight/{id}")
+	public String unhighlight(@PathVariable Long id,Model model) {
+		
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		
+		
+		Sale sale=salesService.getSale(id);
+		salesService.unhighlight(sale);
+		usersService.updateMoney(user, 20);
+		
+		httpSession.setAttribute("user",usersService.getUserByEmail(email));
+		
+		
+		return "redirect:/sale/list";
 	}
 }

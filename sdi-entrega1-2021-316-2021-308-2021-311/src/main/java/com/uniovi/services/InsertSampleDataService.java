@@ -91,6 +91,10 @@ public class InsertSampleDataService {
 		Sale sale19 = new Sale("Coche de playmobil", "Coche de policia de playmobil", 27.8, user5);
 		Sale sale20 = new Sale("Helicoptero de playmobil", "Desbrozadora", 40.5, user6);
 		Sale sale21 = new Sale("Helicoptero", "Helicoptero", 135000, user7);
+		
+		sale3.setOutstanding(true);
+		sale15.setOutstanding(true);
+		sale21.setOutstanding(true);
 
 		
 		salesService.addSale(sale1);

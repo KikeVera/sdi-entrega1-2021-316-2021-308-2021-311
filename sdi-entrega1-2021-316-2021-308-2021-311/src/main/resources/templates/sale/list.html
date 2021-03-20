@@ -4,6 +4,7 @@
 <body>
 
 	<nav th:replace="fragments/nav" />
+	<div sec:authorize="hasRole('ROLE_USER')" th:replace="fragments/money"/>
 
 
 
@@ -18,8 +19,12 @@
 			</div>
 			<button type="submit" class="btn btn-default">Buscar</button>
 		</form>
+		
 		<div th:replace="fragments/user_sales" th:fragment="userSales"/>
-	</div>
+		<p class="text-danger"  th:text="#{Error.sale.money}" th:if="${error}"></p>
+		</div>
+		
+	
 
 	<footer th:replace="fragments/footer" />
 </body>

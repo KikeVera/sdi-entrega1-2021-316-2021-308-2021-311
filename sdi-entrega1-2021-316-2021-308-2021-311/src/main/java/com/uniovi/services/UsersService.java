@@ -52,6 +52,11 @@ public class UsersService {
 		return usersRepository.findByEmail(email);
 	}
 	
+	public void updateMoney(User user,double money) {
+		user.setMoney(user.getMoney()+money);
+		usersRepository.save(user);
+	}
+	
 	
 }
 

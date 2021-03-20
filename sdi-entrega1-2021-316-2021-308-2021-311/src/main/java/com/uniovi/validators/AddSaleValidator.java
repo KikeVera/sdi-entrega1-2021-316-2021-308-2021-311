@@ -28,6 +28,10 @@ public class AddSaleValidator implements Validator{
 		if (sale.getCost() <0) {
 			errors.rejectValue("cost", "Error.sale.cost");
 		}
+		
+		if(sale.getUser().getMoney()<20 && sale.isOutstanding()) {
+			errors.rejectValue("user", "Error.sale.money");
+		}
 	}
 
 }

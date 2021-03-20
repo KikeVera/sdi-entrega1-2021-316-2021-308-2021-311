@@ -13,9 +13,7 @@ import javax.persistence.Table;
 @Table(name = "sale")
 public class Sale {
 
-	public enum SALESTATE {
-		AVAILABLE, SOLD, OUTSTANDING
-	}
+	
 
 	@Id
 	@GeneratedValue
@@ -24,7 +22,8 @@ public class Sale {
 	private String description;
 	private LocalDate date;
 	private double cost;
-	private SALESTATE state;
+	private boolean available=true;
+	private boolean outstanding=false;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -41,7 +40,7 @@ public class Sale {
 		this.date = LocalDate.now();
 		this.cost = cost;
 		this.user = user;
-		this.state = SALESTATE.AVAILABLE;
+		
 	}
 
 	public long getId() {
@@ -92,23 +91,23 @@ public class Sale {
 		this.user = user;
 	}
 
-	public SALESTATE getState() {
-		return state;
+
+	public boolean isAvailable() {
+		return available;
 	}
 
+	public void setAvailable(boolean available) {
+		this.available = available;
+	}
 
-	public void setState(SALESTATE state) {
-		this.state = state;
+	public boolean isOutstanding() {
+		return outstanding;
+	}
+
+	public void setOutstanding(boolean outstanding) {
+		this.outstanding = outstanding;
 	}
 	
 	
-
-
-	public void bought() {
-		this.state=SALESTATE.SOLD;
-	}
-	public boolean wasBought() {
-		return state == SALESTATE.SOLD;
-	}
 
 }
