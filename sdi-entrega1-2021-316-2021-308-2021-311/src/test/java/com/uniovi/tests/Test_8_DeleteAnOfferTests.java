@@ -33,7 +33,7 @@ import com.uniovi.tests.util.SeleniumUtils;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_7_OwnOffersListTests {
+public class Test_8_DeleteAnOfferTests {
 	@Autowired
 	private UsersService usersService;
 	@Autowired
@@ -47,7 +47,7 @@ public class Tests_7_OwnOffersListTests {
 
 	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
 	static String Geckdriver024 = "C:\\Users\\Adakrs\\Desktop\\Clase2\\SDI\\PL-SDI-Sesión5-material\\geckodriver024win64.exe";
-
+	
 	static WebDriver driver = getDriver(PathFirefox65, Geckdriver024);
 	static String URL = "http://localhost:8090";
 
@@ -80,10 +80,10 @@ public class Tests_7_OwnOffersListTests {
 		driver.quit();
 	}
 
-	// PR18. Mostrar el listado de ofertas para dicho usuario y comprobar que se
-	// muestran todas las ofertas que existen
+	// PR19. Ir a la lista de ofertas, borrar la primera oferta de la lista, comprobar que la lista se actualiza y
+	//que la oferta desaparece.
 	@Test
-	public void PR18() {
+	public void PR19() {
 		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 
@@ -105,14 +105,64 @@ public class Tests_7_OwnOffersListTests {
 		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
 		assertTrue(elementos.size() == 3);
 
-		// Comprobamos que las ofertas agregadas al usuario aparecen todas
-		PO_View.checkElement(driver, "text", "Bici de montaña");
-		PO_View.checkElement(driver, "text", "Mesa de salón");
-		PO_View.checkElement(driver, "text", "Barco de pesca");
-
+		//Obtenemos el enlace para eliminar la primera oferta
+		elementos = PO_View.checkElement(driver, "free", "//td[contains(text(), 'Bici de montaña')]/following-sibling::*/a[contains(@href, 'sale/delete')]");
+		
+		//Eliminamos la primera oferta
+		elementos.get(0).click();
+		
+		// Contamos el número de filas de ofertas
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 2);
+		
+		//Comprobamos que no aparece la oferta
+		SeleniumUtils.EsperaCargaPaginaNoTexto(driver, "Bici de montaña",PO_View.getTimeout() );
+		
 		// Cerrar sesion
 		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
 	}
+	
+	// PR20. Ir a la lista de ofertas, borrar la última oferta de la lista, comprobar que la lista se actualiza y
+	//que la oferta desaparece.
+		@Test
+		public void PR20() {
+			// Nos logeamos como usuario y que comprobamos que aparecemos en la página
+			// de este
+
+			PO_PrivateView.loginAndCheckKey(driver, "LucasNuñez@gmail.com", "123456", "usuarioAutenticado.message",
+					PO_Properties.getSPANISH());
+
+			// Pinchamos en la opción de menu de oferta: //li[contains(@id, 'sale-menu')]/a
+			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
+			elementos.get(0).click();
+
+			// Esperamos a aparezca la opción de agregar una nueva oferta:
+			// //a[contains(@href,
+			// '/sale/list')]
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/list')]");
+			// Pinchamos en listar ofertas de usuario.
+			elementos.get(0).click();
+
+			// Contamos el número de filas de ofertas
+			elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+			assertTrue(elementos.size() == 3);
+
+			//Obtenemos el enlace para eliminar la primera oferta
+			elementos = PO_View.checkElement(driver, "free", "//td[contains(text(), 'Bici de segunda mano')]/following-sibling::*/a[contains(@href, 'sale/delete')]");
+			
+			//Eliminamos la primera oferta
+			elementos.get(0).click();
+			
+			// Contamos el número de filas de ofertas
+			elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+			assertTrue(elementos.size() == 2);
+			
+			//Comprobamos que no aparece la oferta
+			SeleniumUtils.EsperaCargaPaginaNoTexto(driver, "Bici de segunda mano",PO_View.getTimeout() );
+			
+			// Cerrar sesion
+			PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
+		}
 
 	public void init() {
 		usersRepository.deleteAll();
@@ -159,7 +209,7 @@ public class Tests_7_OwnOffersListTests {
 		usersService.addUser(user8);
 
 		Sale sale1 = new Sale("Bici de montaña", "Bici de degunda mano", 200.50, user1);
-		Sale sale2 = new Sale("Bici de carretera", "Bici de degunda mano", 300, user2);
+		Sale sale2 = new Sale("Bici de carretera", "Bici de segunda mano", 300, user2);
 		Sale sale3 = new Sale("Ordenador portatil HP", "Portatil", 400, user3);
 		Sale sale4 = new Sale("Ordenador de sobremesa", "PC viejo", 150, user4);
 		Sale sale5 = new Sale("Nevera con congelador", "Nevera", 80, user5);
