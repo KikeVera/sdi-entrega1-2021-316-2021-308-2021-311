@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.uniovi.entities.Conversation;
 import com.uniovi.entities.Message;
 import com.uniovi.entities.Sale;
-import com.uniovi.entities.User;	
+import com.uniovi.entities.User;
 import com.uniovi.services.ConversationsService;
 import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
@@ -47,5 +47,18 @@ public class ConversationsController {
 		model.addAttribute("sale", "/sale/conversation/" + sale.getId());
 		
 		return "sale/conversation";
+	}
+	
+	@RequestMapping("/conversation/list")
+	public String getList(Model model) {
+
+		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+		String email = auth.getName();
+		User user = usersService.getUserByEmail(email);
+		
+		model.addAttribute("userConversation", conversationsService.getConversationsByUser(user));
+		
+		
+		return "conversation/list";
 	}
 }

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head th:replace="fragments/head" />
+<body>
+
+	<nav th:replace="fragments/nav" />
+	<div sec:authorize="hasRole('ROLE_USER')" th:replace="fragments/money"/>
+
+
+
+	<div class="container">
+		<h2>
+			<span th:text="#{conversation.list.title}">Tus Ofertas</span>
+		</h2>
+		
+		<div class="table-responsive">
+			<table class="table table-hover"
+				id="userConversation">
+				<thead>
+					<tr>
+						<th th:text="#{conversation.list.email}" class="col-md-1"></th>
+						<th th:text="#{conversation.list.sale}" class="col-md-1"></th>
+						<th class="col-md-1"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr th:each="conversation : ${userConversation}">
+						<td th:text="${conversation.sale.user.email}">Title</td>
+						<td th:text="${conversation.sale.title}">Descripcion</td>
+						<td><a th:href="${'/sale/conversation/' + conversation.sale.id}"><span
+								th:text="#{conversation.list.chat}">Chat</span></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		</div>
+		
+	
+
+	<footer th:replace="fragments/footer" />
+</body>
+</html>
