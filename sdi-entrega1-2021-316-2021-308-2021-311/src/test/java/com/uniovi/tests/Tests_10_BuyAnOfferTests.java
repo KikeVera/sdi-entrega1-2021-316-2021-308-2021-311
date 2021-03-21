@@ -1,7 +1,5 @@
 package com.uniovi.tests;
 
-import static org.junit.Assert.assertTrue;
-
 import java.util.List;
 
 import org.junit.After;
@@ -26,14 +24,14 @@ import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
 import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
+import com.uniovi.tests.pageobjects.PO_RegisterView;
 import com.uniovi.tests.pageobjects.PO_View;
-import com.uniovi.tests.util.SeleniumUtils;
 
 //Ordenamos las pruebas por el nombre del método
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_11_BuyOffersTests {
+public class Tests_10_BuyAnOfferTests {
 	@Autowired
 	private UsersService usersService;
 	@Autowired
@@ -80,34 +78,116 @@ public class Tests_11_BuyOffersTests {
 		driver.quit();
 	}
 
-	// PR16. Ir a la opción de ofertas compradas del usuario y mostrar la lista. Comprobar que aparecen
-	//las ofertas que deben aparecer
+	// PR23. Sobre una búsqueda determinada (a elección del desarrollador), comprar
+	// una oferta que deja
+	// un saldo positivo en el contador del comprador. Comprobar que el contador se
+	// actualiza correctamente
+	// en la vista del comprador
 	@Test
-	public void PR26() {
+	public void PR23() {
 		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 
 		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
 				PO_Properties.getSPANISH());
 
-		// Pinchamos en la opción de menu de oferta: //li[contains(@id, 'sale-menu')]/a
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
+		// Pinchamos en la opción de ir de compras: //a[contains(@href,
+		// 'sale/shopping')]
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
+
 		elementos.get(0).click();
 
-		// Esperamos a aparezca la opción de listar nuestras ofertas compradas:
-		// //a[contains(@href,
-		// '/sale/user/buys')]
-		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/user/buys')]");
-		// Pinchamos en listar ofertas compradas.
+		// Guardamos el dinero actual
+		Double money = usersService.getUserByEmail("PedroDiaz@gmail.com").getMoney();
+
+		// Comprobamos que se muestre el dinero del usuario
+		PO_View.checkElement(driver, "free", "//*/p/b[contains(text(), '" + money + "')]");
+
+		// Compramos una oferta
+		elementos = PO_View.checkElement(driver, "free",
+				"//*[contains(text(), 'Coche de playmobil')]/following-sibling::*/a[contains(@href, 'sale/buy')]");
 		elementos.get(0).click();
 
-		// Contamos el número de filas de ofertas
-		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
-		assertTrue(elementos.size() == 2);
+		// Comprobamos que se muestre el dinero actualizado
+		PO_View.checkElement(driver, "free", "//p/b[contains(text(), '72.2')]");
 
-		// Comprobamos que aparenen las ofertas que deben aparecer
-		PO_View.checkElement(driver, "text", "Rascador para gatos");
-		PO_View.checkElement(driver, "text", "Helicoptero de playmobil");
+		// Cerrar sesion
+		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
+	}
+
+	// PR24. Sobre una búsqueda determinada (a elección del desarrollador), comprar
+	// una oferta que deja
+	// un saldo 0 en el contador del comprador. Comprobar que el contador se
+	// actualiza correctamente en la
+	// vista del comprador
+	@Test
+	public void PR24() {
+		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
+		// de este
+
+		PO_PrivateView.loginAndCheckKey(driver, "LucasNuñez@gmail.com", "123456", "usuarioAutenticado.message",
+				PO_Properties.getSPANISH());
+
+		// Pinchamos en la opción de ir de compras: //a[contains(@href,
+		// 'sale/shopping')]
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
+
+		elementos.get(0).click();
+
+		// Guardamos el dinero actual
+		Double money = usersService.getUserByEmail("LucasNuñez@gmail.com").getMoney();
+
+		// Comprobamos que se muestre el dinero del usuario
+		PO_View.checkElement(driver, "free", "//*/p/b[contains(text(), '" + money + "')]");
+
+		// Compramos una oferta
+		elementos = PO_View.checkElement(driver, "free",
+				"//*[contains(text(), '100.0')]/following-sibling::*/a[contains(@href, 'sale/buy')]");
+		elementos.get(0).click();
+
+		// Comprobamos que se muestre el dinero actualizado
+		PO_View.checkElement(driver, "free", "//p/b[contains(text(), '0.0')]");
+
+		// Cerrar sesion
+		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
+	}
+
+	// PR25. Sobre una búsqueda determinada (a elección del desarrollador), intentar
+	// comprar una oferta
+	// que esté por encima de saldo disponible del comprador. Y comprobar que se
+	// muestra el mensaje de
+	// saldo no suficiente.
+	@Test
+	public void PR25() {
+		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
+		// de este
+
+		PO_PrivateView.loginAndCheckKey(driver, "MariaRodriquez@gmail.com", "123456", "usuarioAutenticado.message",
+				PO_Properties.getSPANISH());
+
+		// Pinchamos en la opción de ir de compras: //a[contains(@href,
+		// 'sale/shopping')]
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
+
+		elementos.get(0).click();
+
+		// Guardamos el dinero actual
+		Double money = usersService.getUserByEmail("MariaRodriquez@gmail.com").getMoney();
+
+		// Comprobamos que se muestre el dinero del usuario
+		PO_View.checkElement(driver, "free", "//*/p/b[contains(text(), '" + money + "')]");
+
+		// Compramos una oferta
+		elementos = PO_View.checkElement(driver, "free",
+				"//*[contains(text(), 'Helicoptero')]/following-sibling::*/a[contains(@href, 'sale/buy')]");
+		elementos.get(0).click();
+
+		// Comprobamos que se muestre el dinero sigue igual
+		PO_View.checkElement(driver, "free", "//*/p/b[contains(text(), '" + money + "')]");
+		
+		//Comprobamos el error de saldo insuficiente
+		PO_RegisterView.checkKey(driver, "error.sale.insufficientMoney", PO_Properties.getSPANISH());
+
 		// Cerrar sesion
 		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
 	}
@@ -181,10 +261,6 @@ public class Tests_11_BuyOffersTests {
 		sale3.setOutstanding(true);
 		sale15.setOutstanding(true);
 		sale21.setOutstanding(true);
-		sale17.setBuyer(user1);
-		sale17.setAvailable(false);
-		sale20.setBuyer(user1);
-		sale20.setAvailable(false);
 
 		salesService.addSale(sale1);
 		salesService.addSale(sale2);

@@ -155,6 +155,8 @@ public class SalesController {
 			redAtributes.addFlashAttribute("error3", "");
 			return "redirect:/sale/shopping";
 		}
+		
+		httpSession.setAttribute("user",usersService.getUserByEmail(email));
 		return "redirect:/sale/shopping";
 	}
 	
