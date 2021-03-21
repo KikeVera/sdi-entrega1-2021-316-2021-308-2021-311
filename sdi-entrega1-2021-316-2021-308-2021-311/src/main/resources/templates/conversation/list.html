@@ -29,6 +29,8 @@
 						<td th:text="${conversation.sale.title}">Descripcion</td>
 						<td><a th:href="${'/sale/conversation/' + conversation.sale.id}"><span
 								th:text="#{conversation.list.chat}">Chat</span></a></td>
+						<td><a th:href="${'/conversation/delete/' + conversation.id}"><span
+								th:text="#{users.delete.submit}">Eliminar</span></a></td>
 					</tr>
 				</tbody>
 			</table>

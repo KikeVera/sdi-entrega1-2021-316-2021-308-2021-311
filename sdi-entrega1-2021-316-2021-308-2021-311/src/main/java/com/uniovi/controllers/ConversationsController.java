@@ -61,4 +61,10 @@ public class ConversationsController {
 		
 		return "conversation/list";
 	}
+	
+	@RequestMapping("/conversation/delete/{id}")
+	public String deleteConverstion (@PathVariable Long id){
+		conversationsService.deleteConversation(id);
+		return "redirect:/conversation/list";
+	}
 }
