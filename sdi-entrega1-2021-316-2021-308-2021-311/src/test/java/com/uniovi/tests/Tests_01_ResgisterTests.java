@@ -229,6 +229,21 @@ public class Tests_01_ResgisterTests {
 		salesService.addSale(sale19);
 		salesService.addSale(sale20);
 		salesService.addSale(sale21);
+		
+		salesService.buy(user1, sale2);
+		salesService.buy(user1, sale4);
+		salesService.buy(user2, sale1);
+		salesService.buy(user2, sale5);
+		salesService.buy(user3, sale6);
+		salesService.buy(user3, sale7);
+		salesService.buy(user4, sale9);
+		salesService.buy(user4, sale13);
+		salesService.buy(user5, sale14);
+		salesService.buy(user5, sale16);
+		salesService.buy(user6, sale3);
+		salesService.buy(user6, sale8);
+		salesService.buy(user7, sale15);
+		salesService.buy(user7, sale11);
 			
 		
 	}
