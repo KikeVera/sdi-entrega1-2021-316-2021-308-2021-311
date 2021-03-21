@@ -1,12 +1,15 @@
 package com.uniovi.entities;
 
 import java.time.LocalDate;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
@@ -33,6 +36,9 @@ public class Sale {
 	@JoinColumn(name = "buyer_id")
 	private User buyer;
 
+	@OneToMany(mappedBy = "sale", cascade = CascadeType.ALL)
+    private Set<Conversation> conversation;
+	
 	public Sale() {
 
 	}
