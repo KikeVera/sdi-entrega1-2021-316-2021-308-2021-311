@@ -16,9 +16,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import com.uniovi.entities.Conversation;
+import com.uniovi.entities.Message;
 import com.uniovi.entities.Sale;
 import com.uniovi.entities.User;
 import com.uniovi.repositories.UsersRepository;
+import com.uniovi.services.ConversationsService;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
@@ -48,6 +51,8 @@ public class Tests_04_UserListTests {
 	@Autowired
 	private UsersRepository usersRepository;
 	
+	@Autowired
+	private ConversationsService conversationsService;
 	
 	
 	
@@ -226,6 +231,92 @@ public class Tests_04_UserListTests {
 		salesService.buy(user6, sale8);
 		salesService.buy(user7, sale15);
 		salesService.buy(user7, sale11);
+		
+		Conversation conversacion1= new Conversation(user2, sale1);
+		conversacion1.AddMessage(new Message(user2, "Hola"));
+		conversacion1.AddMessage(new Message(user1, "Hola que tal"));
+		Conversation conversacion2= new Conversation(user3, sale2);
+		conversacion2.AddMessage(new Message(user3, "Hola"));
+		conversacion2.AddMessage(new Message(user2, "Hola que tal"));
+		Conversation conversacion3= new Conversation(user4, sale3);
+		conversacion3.AddMessage(new Message(user4, "Hola"));
+		conversacion3.AddMessage(new Message(user3, "Hola que tal"));
+		Conversation conversacion4= new Conversation(user5, sale4);
+		conversacion4.AddMessage(new Message(user5, "Hola"));
+		conversacion4.AddMessage(new Message(user4, "Hola que tal"));
+		Conversation conversacion5= new Conversation(user6, sale5);
+		conversacion5.AddMessage(new Message(user6, "Hola"));
+		conversacion5.AddMessage(new Message(user5, "Hola que tal"));
+		Conversation conversacion6= new Conversation(user7, sale6);
+		conversacion6.AddMessage(new Message(user7, "Hola"));
+		conversacion6.AddMessage(new Message(user6, "Hola que tal"));
+		Conversation conversacion7= new Conversation(user1, sale7);
+		conversacion7.AddMessage(new Message(user1, "Hola"));
+		conversacion7.AddMessage(new Message(user7, "Hola que tal"));
+		Conversation conversacion8= new Conversation(user2, sale8);
+		conversacion8.AddMessage(new Message(user2, "Hola"));
+		conversacion8.AddMessage(new Message(user1, "Hola que tal"));
+		Conversation conversacion9= new Conversation(user3, sale9);
+		conversacion9.AddMessage(new Message(user3, "Hola"));
+		conversacion9.AddMessage(new Message(user2, "Hola que tal"));
+		Conversation conversacion10= new Conversation(user4, sale10);
+		conversacion10.AddMessage(new Message(user4, "Hola"));
+		conversacion10.AddMessage(new Message(user3, "Hola que tal"));
+		Conversation conversacion11= new Conversation(user5, sale11);
+		conversacion11.AddMessage(new Message(user5, "Hola"));
+		conversacion11.AddMessage(new Message(user4, "Hola que tal"));
+		Conversation conversacion12= new Conversation(user6, sale12);
+		conversacion12.AddMessage(new Message(user6, "Hola"));
+		conversacion12.AddMessage(new Message(user5, "Hola que tal"));
+		Conversation conversacion13= new Conversation(user7, sale13);
+		conversacion13.AddMessage(new Message(user7, "Hola"));
+		conversacion13.AddMessage(new Message(user6, "Hola que tal"));
+		Conversation conversacion14= new Conversation(user1, sale14);
+		conversacion14.AddMessage(new Message(user1, "Hola"));
+		conversacion14.AddMessage(new Message(user7, "Hola que tal"));
+		Conversation conversacion15= new Conversation(user2, sale15);
+		conversacion15.AddMessage(new Message(user2, "Hola"));
+		conversacion15.AddMessage(new Message(user1, "Hola que tal"));
+		Conversation conversacion16= new Conversation(user3, sale16);
+		conversacion16.AddMessage(new Message(user3, "Hola"));
+		conversacion16.AddMessage(new Message(user2, "Hola que tal"));
+		Conversation conversacion17= new Conversation(user4, sale17);
+		conversacion17.AddMessage(new Message(user4, "Hola"));
+		conversacion17.AddMessage(new Message(user3, "Hola que tal"));
+		Conversation conversacion18= new Conversation(user5, sale18);
+		conversacion18.AddMessage(new Message(user5, "Hola"));
+		conversacion18.AddMessage(new Message(user4, "Hola que tal"));
+		Conversation conversacion19= new Conversation(user6, sale19);
+		conversacion19.AddMessage(new Message(user6, "Hola"));
+		conversacion19.AddMessage(new Message(user5, "Hola que tal"));
+		Conversation conversacion20= new Conversation(user7, sale20);
+		conversacion20.AddMessage(new Message(user7, "Hola"));
+		conversacion10.AddMessage(new Message(user6, "Hola que tal"));
+		Conversation conversacion21= new Conversation(user1, sale21);
+		conversacion21.AddMessage(new Message(user1, "Hola"));
+		conversacion21.AddMessage(new Message(user7, "Hola que tal"));
+		
+		conversationsService.addConversation(conversacion1);
+		conversationsService.addConversation(conversacion2);
+		conversationsService.addConversation(conversacion3);
+		conversationsService.addConversation(conversacion4);
+		conversationsService.addConversation(conversacion5);
+		conversationsService.addConversation(conversacion6);
+		conversationsService.addConversation(conversacion7);
+		conversationsService.addConversation(conversacion8);
+		conversationsService.addConversation(conversacion9);
+		conversationsService.addConversation(conversacion10);
+		conversationsService.addConversation(conversacion11);
+		conversationsService.addConversation(conversacion12);
+		conversationsService.addConversation(conversacion13);
+		conversationsService.addConversation(conversacion14);
+		conversationsService.addConversation(conversacion15);
+		conversationsService.addConversation(conversacion16);
+		conversationsService.addConversation(conversacion17);
+		conversationsService.addConversation(conversacion18);
+		conversationsService.addConversation(conversacion19);
+		conversationsService.addConversation(conversacion20);
+		conversationsService.addConversation(conversacion21);
 			
 		
 	}

@@ -1,6 +1,14 @@
 package com.uniovi.entities;
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/heads/master
 import java.util.HashSet;
+<<<<<<< HEAD
+=======
+
+>>>>>>> refs/heads/master
 import java.util.Set;
 
 import javax.persistence.CollectionTable;
