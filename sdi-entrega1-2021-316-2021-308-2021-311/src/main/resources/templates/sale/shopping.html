@@ -33,6 +33,7 @@
         				<th th:text="#{sale.add.saleCost}"></th>
 						<th class="col-md-1"></th>
 						<th class="col-md-1"></th>
+						<th class="col-md-1"></th>
 						
 					</tr>
 				</thead>
@@ -46,10 +47,14 @@
 						<td th:if="${sale.available and  user!=sale.user}"><a th:href="${'/sale/buy/' + sale.id}"><span
 								th:text="#{sale.buy.submit}">Comprar</span></a></td>
 								
+						<td th:if="${sale.available and  user!=sale.user}"><a th:href="${'/sale/conversation/' + sale.id}"><span
+								>Chat</span></a></td>
+								
 						<td th:if="${!sale.available and  user!=sale.user}"><span
 								th:text="#{sale.sold}">Vendido</span></td>
 						
 						
+						<td th:if="${ user==sale.user}" class="col-md-1"> </td>
 						<td th:if="${ user==sale.user}" class="col-md-1"> </td>
 						<td th:text="#{outstanding.message}">10</td>
 						
@@ -64,6 +69,9 @@
 						<td th:text="${sale.cost}">10</td>
 						<td th:if="${sale.available and  user!=sale.user}"><a th:href="${'/sale/buy/' + sale.id}"><span
 								th:text="#{sale.buy.submit}">Comprar</span></a></td>
+								
+						<td th:if="${sale.available and  user!=sale.user}"><a th:href="${'/sale/conversation/' + sale.id}"><span
+								>Chat</span></a></td>		
 								
 						<td th:if="${!sale.available and  user!=sale.user}"><span
 								th:text="#{sale.sold}">Vendido</span></td>

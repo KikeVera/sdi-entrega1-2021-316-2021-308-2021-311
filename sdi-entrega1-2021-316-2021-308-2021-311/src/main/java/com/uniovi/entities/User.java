@@ -37,6 +37,9 @@ public class User {
 	
 	@OneToMany(mappedBy = "buyer", cascade = CascadeType.ALL)
 	private Set<Sale> salesboughts;
+	
+	@OneToMany(mappedBy = "customer", cascade = CascadeType.ALL)
+	private Set<Conversation> conversations;
 
 	public User() {
 		
@@ -126,6 +129,14 @@ public class User {
 
 	public void setSalesboughts(Set<Sale> salesboughts) {
 		this.salesboughts = salesboughts;
+	}
+
+	public Set<Conversation> getConversations() {
+		return conversations;
+	}
+
+	public void setConversations(Set<Conversation> conversations) {
+		this.conversations = conversations;
 	}
 	
 	
