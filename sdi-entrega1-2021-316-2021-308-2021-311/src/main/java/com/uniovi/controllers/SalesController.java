@@ -33,6 +33,7 @@ import com.uniovi.validators.AddSaleValidator;
 @Controller
 public class SalesController {
 
+	//Inyección de servicios necesarios en este controlador
 	@Autowired
 	private SalesService salesService;
 
@@ -112,23 +113,29 @@ public class SalesController {
 	
 	
 	
-
+	//Peticicón que te lleva a vista de compras
 	@RequestMapping("/sale/shopping")
 	public String getList(Model model,Pageable pageable, 
 			@RequestParam(value = "", required = false) String searchText) {
+		//Obtenemos el usario autenticado
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
+		//Definimos el objeto para la paginación
 		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
 		
 		
 		if(searchText==null || searchText.isEmpty()) {
+			//Si no hay texto de busqueda se llamará al método que devuelve todas las ofertas
 			sales=salesService.getShopping(pageable);
 		}
 		
 		else {
+			//Si hay texto de bisqueda se filtrará por este texto
 			sales=salesService.getShopping(pageable, searchText);
 		}
+		
+		//Se añaden el usuario, las ofertas y la paginación al módelo
 		model.addAttribute("userSales",sales.getContent());
 		model.addAttribute("user", user);
 		model.addAttribute("page", sales);
@@ -160,41 +167,50 @@ public class SalesController {
 		return "redirect:/sale/shopping";
 	}
 	
+	//Petición queconvierte una oferta en destacada por el coste de 20 euros
 	@RequestMapping("/sale/highlight/{id}")
 	public String highlight(@PathVariable Long id,RedirectAttributes redAtributes) {
 		
+		//Obtenemos el usario autenticado
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
 		
+		//Si no tenemos bastante dinero mandamos un mensaje de error al usuario
 		if(user.getMoney()<20) {
 			
 			redAtributes.addFlashAttribute("error", "");
 			return "redirect:/sale/list";
 		}
 		
+		//Si tenemos el dinero convertimos la oferta en destacada y restamos el dinero al usario
 		Sale sale=salesService.getSale(id);
 		salesService.highlight(sale);
 		usersService.updateMoney(user, -20);
 		
+		//Actualizamos la sesíon para mostrar el nuevo saldo
 		httpSession.setAttribute("user",usersService.getUserByEmail(email));
 		
 		
 		return "redirect:/sale/list";
 	}
 	
+	
+	//Petición queconvierte una oferta en no destacada devolviendo el los 20 ueors
 	@RequestMapping("/sale/unhighlight/{id}")
 	public String unhighlight(@PathVariable Long id,Model model) {
 		
+		//Obtenemos el usario autenticado
 		Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 		String email = auth.getName();
 		User user = usersService.getUserByEmail(email);
 		
-		
+		//Convertimos la oferta en no destacada y le devolvemos los 20 euros al usuario
 		Sale sale=salesService.getSale(id);
 		salesService.unhighlight(sale);
 		usersService.updateMoney(user, 20);
 		
+		//Actualizamos la sesíon para mostrar el nuevo saldo
 		httpSession.setAttribute("user",usersService.getUserByEmail(email));
 		
 		

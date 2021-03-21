@@ -24,6 +24,7 @@ public class SalesService {
 	@Autowired
 	private UsersRepository userRepository;
 
+	
 	public List<Sale> getSales() {
 		List<Sale> sales = new ArrayList<Sale>();
 		salesRepository.findAll().forEach(sales::add);
@@ -53,7 +54,7 @@ public class SalesService {
 		return salesRepository.searchSalesByTitleAndUser(searchText,user,"OUTSTANDING");
 	}
 	
-	
+	//Obtención de las ofertas del sistema
 	public Page<Sale> getShopping(Pageable pageable){
 		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
 		
@@ -62,6 +63,7 @@ public class SalesService {
 		return sales;
 	}
 	
+	//Obtención de las ofertas del sistema, filtradas por el texto de busqueda
 	public Page<Sale> getShopping(Pageable pageable,String searchtext){
 		Page<Sale> sales= new PageImpl<Sale>(new LinkedList<Sale>());
 		searchtext = "%"+searchtext+"%";
@@ -82,6 +84,7 @@ public class SalesService {
 		return false;
 	}
 	
+	//Conversión de una oferta a destacada
 	public void highlight(Sale sale) {
 		sale.setOutstanding(true);
 		salesRepository.save(sale);
@@ -89,6 +92,7 @@ public class SalesService {
 		
 	}
 	
+	//Conversión de una oferta a no destacada
 	public void unhighlight(Sale sale) {
 		sale.setOutstanding(false);
 		salesRepository.save(sale);

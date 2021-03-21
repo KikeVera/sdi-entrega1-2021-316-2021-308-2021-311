@@ -42,17 +42,22 @@ public class SecurityService {
 		}
 	}
 	
+	//Metodo booleano que devuelve si el usuario se puede autenticar
 	public boolean canBeLogged(String email, String password) {
+		//Obtenemo el token de autentificación
 		UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 		UsernamePasswordAuthenticationToken aToken = new UsernamePasswordAuthenticationToken(userDetails, password,
 				userDetails.getAuthorities());
 		
 		
+		//Si el token no es válido de produce una excepción y devolvemos false
 		try {
 			authenticationManager.authenticate(aToken);
 		} catch (AuthenticationException e) {
 			return false;
 		}
+		
+		//Si está todo bien devolvemos true
 		return true;
 		
 		
