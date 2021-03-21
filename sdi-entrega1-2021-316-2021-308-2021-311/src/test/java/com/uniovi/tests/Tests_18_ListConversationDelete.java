@@ -9,7 +9,7 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -34,7 +34,7 @@ import com.uniovi.tests.pageobjects.PO_View;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_17_ListConversation {
+public class Tests_18_ListConversationDelete {
 
 	@Autowired
 	private UsersService usersService;
@@ -83,10 +83,10 @@ public class Tests_17_ListConversation {
 		driver.quit();
 	}
 
-	// PR33. Mostrar el listado de conversaciones ya abiertas. Comprobar que el listado contiene las
-	//conversaciones que deben ser.
+	// PR34. Sobre el listado de conversaciones ya abiertas. Pinchar el enlace
+	// Eliminar de la primera y comprobar que el listado se actualiza correctamente.
 	@Test
-	public void PR33() {
+	public void PR34() {
 		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
@@ -99,7 +99,41 @@ public class Tests_17_ListConversation {
 		elementos.get(0).click();
 
 		// Compramos que aparecen las conversaciones
-		
+
+		PO_View.checkElement(driver, "text", "Bici de montaña");
+		PO_View.checkElement(driver, "text", "Juego de mesa");
+		PO_View.checkElement(driver, "text", "Mesa de salón");
+		PO_View.checkElement(driver, "text", "Barco de playmobil");
+		PO_View.checkElement(driver, "text", "Barco de pesca");
+		PO_View.checkElement(driver, "text", "Helicoptero");
+
+		// Buscamos en enlace de eliminar
+		By enlace = By.xpath("//table/tbody/tr[1]/td[4]/a");
+		// Hacemos click en borrar
+		driver.findElement(enlace).click();
+
+		PO_View.checkNotElement(driver, "Bici de montaña");
+		// Cerrar sesion
+		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
+	}
+
+	// PR34. Sobre el listado de conversaciones ya abiertas, pulsar el enlace
+	// Eliminar de la última y comprobar que el listado se actualiza correctamente.
+	@Test
+	public void PR35() {
+		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
+		// de este
+		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
+				PO_Properties.getSPANISH());
+
+		// Pinchamos en la opción de ir a mis conversaciones: //a[contains(@href,
+		// '/conversation/list')]
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/conversation/list')]");
+
+		elementos.get(0).click();
+
+		// Compramos que aparecen las conversaciones
+
 		PO_View.checkElement(driver, "text", "Bici de montaña");
 		PO_View.checkElement(driver, "text", "Juego de mesa");
 		PO_View.checkElement(driver, "text", "Mesa de salón");
@@ -107,10 +141,17 @@ public class Tests_17_ListConversation {
 		PO_View.checkElement(driver, "text", "Barco de pesca");
 		PO_View.checkElement(driver, "text", "Helicoptero");
 		
+		int nFilas=PO_View.checkElement(driver, "free", "//tbody/tr").size();
+		// Buscamos en enlace de eliminar
+		By enlace = By.xpath("//table/tbody/tr["+nFilas+"]/td[4]/a");
+		// Hacemos click en borrar
+		driver.findElement(enlace).click();
+
+		PO_View.checkNotElement(driver, "Helicoptero");
 		// Cerrar sesion
 		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
 	}
-	
+
 		public void init() {
 			usersRepository.deleteAll();
 			User user1 = new User("PedroDiaz@gmail.com", "Pedro", "Díaz");
