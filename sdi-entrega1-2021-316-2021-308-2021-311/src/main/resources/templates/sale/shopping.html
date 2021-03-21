@@ -46,7 +46,7 @@
 						<td th:if="${sale.available and  user!=sale.user}"><a th:href="${'/sale/buy/' + sale.id}"><span
 								th:text="#{sale.buy.submit}">Comprar</span></a></td>
 								
-						<td th:unless="${sale.available}"><span
+						<td th:if="${!sale.available and  user!=sale.user}"><span
 								th:text="#{sale.sold}">Vendido</span></td>
 						
 						
@@ -65,7 +65,7 @@
 						<td th:if="${sale.available and  user!=sale.user}"><a th:href="${'/sale/buy/' + sale.id}"><span
 								th:text="#{sale.buy.submit}">Comprar</span></a></td>
 								
-						<td th:unless="${sale.available}"><span
+						<td th:if="${!sale.available and  user!=sale.user}"><span
 								th:text="#{sale.sold}">Vendido</span></td>
 								
 						<td th:if="${ user==sale.user}" class="col-md-1"> </td>
