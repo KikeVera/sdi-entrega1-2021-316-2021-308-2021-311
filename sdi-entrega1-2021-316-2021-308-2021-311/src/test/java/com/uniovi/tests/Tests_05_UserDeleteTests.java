@@ -3,15 +3,10 @@ package com.uniovi.tests;
 
 
 
-
-
-
 import java.util.List;
-
 
 import org.junit.*;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -21,26 +16,22 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.uniovi.entities.Sale;
 import com.uniovi.entities.User;
-
 import com.uniovi.repositories.UsersRepository;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
-
 import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_View;
-import com.uniovi.tests.util.SeleniumUtils;
 
 import org.junit.runners.MethodSorters;
 
 
 //Ordenamos las pruebas por el nombre del método
-
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_9_LookforSales {
+public class Tests_05_UserDeleteTests {
 	
 	@Autowired
 	private UsersService usersService;
@@ -50,18 +41,14 @@ public class Tests_9_LookforSales {
 	@Autowired
 	private SalesService salesService;
 	
-	
 	@Autowired
 	private UsersRepository usersRepository;
+	
+	
+	
 
 	
-	
-
-	
-	static String PathFirefox65= "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024= "C:\\Users\\Kike\\Desktop\\SDI\\geckoDriver\\geckodriver024win64.exe";
-	
-	static WebDriver driver= getDriver(PathFirefox65, Geckdriver024); 
+	static WebDriver driver= getDriver(PathTests.PathFirefox65, PathTests.Geckdriver024); 
 	static String URL= "http://localhost:8090";
 	
 	public static WebDriver getDriver(String PathFirefox, String Geckdriver) {
@@ -77,12 +64,14 @@ public class Tests_9_LookforSales {
 	public void setUp() throws Exception {
 		init();
 		driver.navigate().to(URL);
+		
 	}
 	
 	//Después de cadaprueba se borran las cookies del navegador
 	@After
 	public void tearDown() throws Exception {
 		driver.manage().deleteAllCookies();
+		
 	}
 	
 	
@@ -93,99 +82,88 @@ public class Tests_9_LookforSales {
 		//Cerramos el navegador al finalizar las pruebas
 		driver.quit();
 	}
-
-	// PR21. Hacer una búsqueda con el campo vacío y comprobar que se muestra la
-	// página que corresponde con el listado de las ofertas existentes en el sistema
+	
+	// PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista,
+	// comprobar que la lista se actualiza y que el usuario desaparece
 	@Test
-	public void PR21()  {
-		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
-		// de este
+	public void PR13() {
+		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
+			// de este
 
-		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
-				PO_Properties.getSPANISH());
-
-
-		// Pinchamos en la opción de ir de compras: //a[contains(@href,
-		// 'user/list')]
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
-	
-		elementos.get(0).click();
-		
-		//Hacemos click en buscar
-		elementos =PO_View.checkKey(driver, "find.submit", PO_Properties.getSPANISH());
-		
-		elementos.get(0).click();
-		
-		//Obtenemos los titulos de todas las ofertas del sistema
-	
-		int pagina=0;
-		//Recorremos todas las ofertas en el sistema
-		for (Sale sale : salesService.getSales()) {
+			PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
+					PO_Properties.getSPANISH());
 				
-			
-			//Buscamos si el elemento está en la primera página
-			elementos = driver.findElements(By.xpath("//*[contains(text(),'" + sale.getTitle() + "')]"));
-			while(elementos.isEmpty()) {
-				//Si no lo está vamos buscando por todas hasta que lo encuentre
-				 pagina++;
-				 elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '?page="+pagina+"')]");
-				 elementos.get(0).click();
-				 elementos = driver.findElements(By.xpath("//td[contains(text(),'" + sale.getTitle() + "')]"));
-				 
+			// Pinchamos en la opción de menu de Usuarios: //li[contains(@id, 'users-menu')]/a
+			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'users-menu')]/a");
+			elementos.get(0).click();
 				
-			}
-			
-			//Cuando lo hayamos encontrado volvemos a la primera página para buscar el siguiente elemento
-			pagina=0;
-			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '?page=0')]");
-			 elementos.get(0).click();
-			
-			
-		}
+			// Esperamos a aparezca la opción de ver usuarios: //a[contains(@href,
+			// 'user/list')]
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'user/list')]");
+			// Pinchamos en listar usuarios.
+			elementos.get(0).click();
+				
+			//Borramos el usuario de la primera fila
+			PO_PrivateView.deleteUsers(driver, 1);
+				
+						
+				
 
 	}
-	
-	//PR22.Hacer una búsqueda escribiendo en el campo un texto que no exista y comprobar que se
-	//muestra la página que corresponde, con la lista de ofertas vacía.
+
+	// PR14.Ir a la lista de usuarios, borrar el último usuario de la lista,
+	// comprobar que la lista se actualiza y que el usuario desaparece
 	@Test
-	public void PR22()  {
-		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
+	public void PR14() {
+		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
 		// de este
 
-		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
+		PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
 				PO_Properties.getSPANISH());
-
-
-		// Pinchamos en la opción de ir de compras: //a[contains(@href,
+		
+		// Pinchamos en la opción de menu de Usuarios: //li[contains(@id, 'users-menu')]/a
+		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'users-menu')]/a");
+		elementos.get(0).click();
+		
+		// Esperamos a aparezca la opción de ver usuarios: //a[contains(@href,
 		// 'user/list')]
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'sale/shopping')]");
-	
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'user/list')]");
+		// Pinchamos en listar usuarios.
 		elementos.get(0).click();
 		
-		
-		
-		//Escribimos en el buscador un texto que no contiene ningun titulo de ninguna oferta
-		WebElement buscador = driver.findElement(By.name("searchText"));
-		buscador.click();
-		buscador.clear();
-		buscador.sendKeys("hhhhhhhhhhh");
-		//Hacemos click en buscar
-		elementos =PO_View.checkKey(driver, "find.submit", PO_Properties.getSPANISH());
-		
-		elementos.get(0).click();
-		
+		//Obtenemos el numero de filas
+		int nFilas=PO_View.checkElement(driver, "free", "//tbody/tr").size();
+		//Borramos el usuario de la ultima fila
+		PO_PrivateView.deleteUsers(driver, nFilas);
 		
 	
 		
-		//Recorremos todas las ofertas en el sistema
-		for (Sale sale : salesService.getSales()) {
-			//Comprobamos que no existan
-			SeleniumUtils.textoNoPresentePagina( driver, sale.getTitle());
-			
-			
-			
-		}
+		
+	}
 
+	// PR15.Ir a la lista de usuarios, borrar 3 usuarios, comprobar que la lista se
+	// actualiza y que losusuarios desaparecen.
+	@Test
+	public void PR15() {
+		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
+			// de este
+
+			PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
+					PO_Properties.getSPANISH());
+				
+			// Pinchamos en la opción de menu de Usuarios: //li[contains(@id, 'users-menu')]/a
+			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'users-menu')]/a");
+			elementos.get(0).click();
+				
+			// Esperamos a aparezca la opción de ver usuarios: //a[contains(@href,
+			// 'user/list')]
+			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'user/list')]");
+			// Pinchamos en listar usuarios.
+			elementos.get(0).click();
+				
+		
+			//Borramos el usuario de la ultima fila
+			PO_PrivateView.deleteUsers(driver, 2,3,4);
 
 	}
 	
@@ -287,12 +265,8 @@ public class Tests_9_LookforSales {
 			
 		
 	}
-		
-
+	
+	
 	
 
-		
-	
-	
 }
-

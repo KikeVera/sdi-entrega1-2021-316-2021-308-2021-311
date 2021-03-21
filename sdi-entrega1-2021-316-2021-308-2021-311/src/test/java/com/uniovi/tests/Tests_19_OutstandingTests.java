@@ -56,13 +56,9 @@ public class Tests_19_OutstandingTests {
 	private UsersRepository usersRepository;
 
 	
-	
 
 	
-	static String PathFirefox65= "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024= "C:\\Users\\Kike\\Desktop\\SDI\\geckoDriver\\geckodriver024win64.exe";
-	
-	static WebDriver driver= getDriver(PathFirefox65, Geckdriver024); 
+	static WebDriver driver= getDriver(PathTests.PathFirefox65, PathTests.Geckdriver024); 
 	static String URL= "http://localhost:8090";
 	
 	public static WebDriver getDriver(String PathFirefox, String Geckdriver) {

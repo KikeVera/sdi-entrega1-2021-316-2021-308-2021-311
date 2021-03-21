@@ -18,8 +18,10 @@ import com.uniovi.repositories.UsersRepository;
 import com.uniovi.services.RolesService;
 import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
-import com.uniovi.tests.pageobjects.PO_PrivateView;
+import com.uniovi.tests.pageobjects.PO_HomeView;
 import com.uniovi.tests.pageobjects.PO_Properties;
+import com.uniovi.tests.pageobjects.PO_RegisterView;
+import com.uniovi.tests.pageobjects.PO_View;
 
 
 import org.junit.runners.MethodSorters;
@@ -29,7 +31,7 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_2_LoginTests {
+public class Tests_01_ResgisterTests {
 	
 	@Autowired
 	private UsersService usersService;
@@ -41,13 +43,10 @@ public class Tests_2_LoginTests {
 	
 	@Autowired
 	private UsersRepository usersRepository;
+
 	
 	
-	
-	static String PathFirefox65= "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024= "C:\\Users\\Kike\\Desktop\\SDI\\geckoDriver\\geckodriver024win64.exe";
-	
-	static WebDriver driver= getDriver(PathFirefox65, Geckdriver024); 
+	static WebDriver driver= getDriver(PathTests.PathFirefox65, PathTests.Geckdriver024); 
 	static String URL= "http://localhost:8090";
 	
 	public static WebDriver getDriver(String PathFirefox, String Geckdriver) {
@@ -63,6 +62,7 @@ public class Tests_2_LoginTests {
 	public void setUp() throws Exception {
 		init();
 		driver.navigate().to(URL);
+		
 	}
 	
 	//Después de cadaprueba se borran las cookies del navegador
@@ -80,53 +80,57 @@ public class Tests_2_LoginTests {
 		driver.quit();
 	}
 	
-	// PR05. Inicio de sesión con datos válidos (administrador).
+	// PR01. Registro de Usuario con datos válidos
 	@Test
-	public void PR05() {
-		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
-		// de este
-
-		PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
-				PO_Properties.getSPANISH());
+	public void PR01() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario.
+		PO_RegisterView.fillForm(driver, "vera.cueto@gmail.com", "Enrique", "Vera", "123456", "123456");
+		// Comprobamos los elementos de Home estando identificado como usuario
+		
+		
+		PO_View.checkKey(driver,"usuarioAutenticado.message" , PO_Properties.getSPANISH());
+		PO_View.checkKey(driver,"home.message" , PO_Properties.getSPANISH());
+		PO_View.checkElement(driver, "text", "Euros");
 
 	}
 
-	// PR06.Inicio de sesión con datos válidos (usuario estándar).
+	// PR02. Registro de Usuario con datos inválidos (email vacío, nombre vacío,
+	// apellidos vacíos)
 	@Test
-	public void PR06() {
-		// Nos logeamos como usuario y que comprobamos que aparecemos en la página de
-		// este
-
-		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
-				PO_Properties.getSPANISH());
+	public void PR02() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario.
+		PO_RegisterView.fillForm(driver, "", "", "", "123456", "123456");
+		// Comprobamos que nos sale un aviso de que los campos no pueden estar vacíos
+		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
 
 	}
 
-	// PR07.Inicio de sesión con datos inválidos (usuario estándar, campo email y
-	// contraseña vacíos).
+	// PR03.Registro de Usuario con datos inválidos (repetición de contraseña
+	// inválida).
 	@Test
-	public void PR07() {
-		// Comprobamos que nos sale el mensae de error correspondiente
-		PO_PrivateView.loginAndCheckKey(driver, "", "", "Error.empty", PO_Properties.getSPANISH());
+	public void PR03() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario.
+		PO_RegisterView.fillForm(driver, "vera@gmail.com", "Enrique", "Vera", "123456", "1234");
+		// Comprobamos que nos sale un aviso de que las contraseñas no coinciden
+		PO_RegisterView.checkKey(driver, "Error.signup.passwordConfirm.coincidence", PO_Properties.getSPANISH());
 
 	}
 
-	// PR08. Inicio de sesión con datos válidos (usuario estándar, email existente,
-	// pero contraseña incorrecta).
+	// PR04.Registro de Usuario con datos inválidos (email existente).
 	@Test
-	public void PR08() {
-		// Comprobamos que nos sale el mensae de error correspondiente
-		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "1234", "Error.signup.password.incorrect",
-				PO_Properties.getSPANISH());
-
-	}
-
-	// PR09. Inicio de sesión con datos inválidos (usuario estándar, email no
-	// existente en la aplicación)
-	@Test
-	public void PR09() {
-		PO_PrivateView.loginAndCheckKey(driver, "Pedro@gmail.com", "1234", "Error.signup.email.notexist",
-				PO_Properties.getSPANISH());
+	public void PR04() {
+		// Vamos al formulario de registro
+		PO_HomeView.clickOption(driver, "signup", "class", "btn btn-primary");
+		// Rellenamos el formulario.
+		PO_RegisterView.fillForm(driver, "kike@gmail.com", "Enrique", "Vera", "123456", "1234");
+		// Comprobamos que nos sale un aviso de que el email esta duplicado
+		PO_RegisterView.checkKey(driver, "Error.signup.passwordConfirm.coincidence", PO_Properties.getSPANISH());
 
 	}
 	
@@ -228,6 +232,9 @@ public class Tests_2_LoginTests {
 			
 		
 	}
+	
+	
+	
 	
 	
 

@@ -1,5 +1,7 @@
 package com.uniovi.tests;
 
+import static org.junit.Assert.assertTrue;
+
 import java.util.List;
 
 import org.junit.After;
@@ -9,7 +11,6 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -25,16 +26,14 @@ import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
 import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
-import com.uniovi.tests.pageobjects.PO_RegisterView;
-import com.uniovi.tests.pageobjects.PO_SaleView;
 import com.uniovi.tests.pageobjects.PO_View;
+import com.uniovi.tests.util.SeleniumUtils;
 
 //Ordenamos las pruebas por el nombre del método
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_6_AddOfferTests {
-
+public class Tests_07_OwnOffersListTests {
 	@Autowired
 	private UsersService usersService;
 	@Autowired
@@ -46,10 +45,8 @@ public class Tests_6_AddOfferTests {
 	@Autowired
 	private UsersRepository usersRepository;
 
-	static String PathFirefox65 = "C:\\Program Files\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024 = "C:\\Users\\Adakrs\\Desktop\\Clase2\\SDI\\PL-SDI-Sesión5-material\\geckodriver024win64.exe";
 	
-	static WebDriver driver = getDriver(PathFirefox65, Geckdriver024);
+	static WebDriver driver = getDriver(PathTests.PathFirefox65, PathTests.Geckdriver024);
 	static String URL = "http://localhost:8090";
 
 	public static WebDriver getDriver(String PathFirefox, String Geckdriver) {
@@ -81,10 +78,10 @@ public class Tests_6_AddOfferTests {
 		driver.quit();
 	}
 
-	// PR16. Ir al formulario de alta de oferta, rellenarla con datos validos y
-	// comprobar tras su envio que la oferta sale en el listado del propio usuario
+	// PR18. Mostrar el listado de ofertas para dicho usuario y comprobar que se
+	// muestran todas las ofertas que existen
 	@Test
-	public void PR16() {
+	public void PR18() {
 		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 
@@ -95,102 +92,24 @@ public class Tests_6_AddOfferTests {
 		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
 		elementos.get(0).click();
 
-		// Esperamos a aparezca la opción de agregar una nueva oferta:
+		// Esperamos a aparezca la opción de listar nuestras ofertas:
 		// //a[contains(@href,
-		// '/sale/add')]
-		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/add')]");
-		// Pinchamos en agregar oferta.
+		// '/sale/list')]
+		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/list')]");
+		// Pinchamos en listar ofertas de usuario.
 		elementos.get(0).click();
 
-		// Rellenar el formulario con datos con datos validos y enviarlo
-		PO_SaleView.fillForm(driver, "OfertaPrueba", "Esto es una prueba", "61", false);
+		// Contamos el número de filas de ofertas
+		elementos = SeleniumUtils.EsperaCargaPagina(driver, "free", "//tbody/tr", PO_View.getTimeout());
+		assertTrue(elementos.size() == 3);
 
-		// Comprobamos que estamos en la pagina de ofertas del usuario
-		PO_View.checkElement(driver, "text", "Tus Ofertas");
-
-		// Comprobamos que la oferta creada es en mi lista de ofertas
-		PO_View.checkElement(driver, "text", "OfertaPrueba");
+		// Comprobamos que las ofertas agregadas al usuario aparecen todas
+		PO_View.checkElement(driver, "text", "Bici de montaña");
+		PO_View.checkElement(driver, "text", "Mesa de salón");
+		PO_View.checkElement(driver, "text", "Barco de pesca");
 
 		// Cerrar sesion
 		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
-	}
-
-	// PR17.Ir al formulario de agregar una nueva oferta y probar los errores con los que nos podemos encontrar
-	@Test
-	public void PR17() {
-		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
-		// de este
-
-		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
-				PO_Properties.getSPANISH());
-
-		// Pinchamos en la opción de menu de oferta: //li[contains(@id, 'sale-menu')]/a
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'sale-menu')]/a");
-		elementos.get(0).click();
-
-		// Esperamos a aparezca la opción de agregar una nueva oferta:
-		// //a[contains(@href,
-		// '/sale/add')]
-		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, '/sale/add')]");
-		// Pinchamos en agregar oferta.
-		elementos.get(0).click();
-		
-		//Titulo vacio
-		PO_SaleView.fillForm(driver, "", "Esto es una prueba", "61", false);
-		
-		//Pulsar el boton de Alta.
-		By boton = By.className("btn");
-		driver.findElement(boton).click();
-		
-		//Comprobamos el error de campo obligatorio
-		PO_RegisterView.checkKey(driver, "Error.empty", PO_Properties.getSPANISH());
-		
-
-		//Titulo menor a 3 caracters
-		PO_SaleView.fillForm(driver, "T", "Esto es una prueba", "61", false);
-		
-		//Pulsar el boton de Alta.
-		driver.findElement(boton).click();
-		
-		//Comprobamos el error de campo titulo
-		PO_RegisterView.checkKey(driver, "Error.sale.title.range", PO_Properties.getSPANISH());
-		
-
-
-		//Titulo mayor a 20 caracters
-		PO_SaleView.fillForm(driver, "Tituloconmasde20caracterserror", "Esto es una prueba", "61", false);
-		
-		//Pulsar el boton de Alta.
-		driver.findElement(boton).click();
-		
-		//Comprobamos el error de campo titulo
-		PO_RegisterView.checkKey(driver, "Error.sale.title.range", PO_Properties.getSPANISH());
-		
-		
-		//Descripcion mayor a 280 caracters
-		PO_SaleView.fillForm(driver, "Titulo", "Esto es una prueba para comprobar el error de mas de 280 caracters "
-				+ "Ppppppppppppppppppppppppppppppppppppppppppppppppppppppprrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrrr"
-				+ "uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeebbbbbbbbbbbbbbb"
-				+ "bbbbbbbbbbbbbbbbaaaaaaaaaaaaaaaaaaaaaaaaa", "61", false);
-		
-		//Pulsar el boton de Alta.
-		driver.findElement(boton).click();
-		
-		//Comprobamos el error de campo descripcion
-		PO_RegisterView.checkKey(driver, "Error.sale.description.length", PO_Properties.getSPANISH());
-		
-		//Precio menor a 0 euros
-		PO_SaleView.fillForm(driver, "Titulo", "Esto es una prueba", "-61", false);
-		
-		//Pulsar el boton de Alta.
-		driver.findElement(boton).click();
-		
-		//Comprobamos el error de coste
-		PO_RegisterView.checkKey(driver, "Error.sale.cost", PO_Properties.getSPANISH());
-		
-		// Cerrar sesion
-		PO_PrivateView.clickOption(driver, "logout", "text", "Identifícate");
-
 	}
 
 	public void init() {

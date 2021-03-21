@@ -3,12 +3,10 @@ package com.uniovi.tests;
 
 
 
-import java.util.List;
-
 import org.junit.*;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -24,6 +22,7 @@ import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
 import com.uniovi.tests.pageobjects.PO_View;
 
+
 import org.junit.runners.MethodSorters;
 
 
@@ -31,7 +30,7 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_5_UserDeleteTests {
+public class Tests_03_LogoutTests {
 	
 	@Autowired
 	private UsersService usersService;
@@ -46,10 +45,9 @@ public class Tests_5_UserDeleteTests {
 	
 	
 	
-	static String PathFirefox65= "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024= "C:\\Users\\Kike\\Desktop\\SDI\\geckoDriver\\geckodriver024win64.exe";
 	
-	static WebDriver driver= getDriver(PathFirefox65, Geckdriver024); 
+	
+	static WebDriver driver= getDriver(PathTests.PathFirefox65, PathTests.Geckdriver024); 
 	static String URL= "http://localhost:8090";
 	
 	public static WebDriver getDriver(String PathFirefox, String Geckdriver) {
@@ -65,14 +63,12 @@ public class Tests_5_UserDeleteTests {
 	public void setUp() throws Exception {
 		init();
 		driver.navigate().to(URL);
-		
 	}
 	
 	//Después de cadaprueba se borran las cookies del navegador
 	@After
 	public void tearDown() throws Exception {
 		driver.manage().deleteAllCookies();
-		
 	}
 	
 	
@@ -83,91 +79,30 @@ public class Tests_5_UserDeleteTests {
 		//Cerramos el navegador al finalizar las pruebas
 		driver.quit();
 	}
-	
-	// PR13. Ir a la lista de usuarios, borrar el primer usuario de la lista,
-	// comprobar que la lista se actualiza y que el usuario desaparece
+
+	// PR12. Hacer click en la opción de salir de sesión y comprobar que se redirige
+	// a la página de inicio de sesión (Login).
 	@Test
-	public void PR13() {
-		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
-			// de este
-
-			PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
-					PO_Properties.getSPANISH());
-				
-			// Pinchamos en la opción de menu de Usuarios: //li[contains(@id, 'users-menu')]/a
-			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'users-menu')]/a");
-			elementos.get(0).click();
-				
-			// Esperamos a aparezca la opción de ver usuarios: //a[contains(@href,
-			// 'user/list')]
-			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'user/list')]");
-			// Pinchamos en listar usuarios.
-			elementos.get(0).click();
-				
-			//Borramos el usuario de la primera fila
-			PO_PrivateView.deleteUsers(driver, 1);
-				
-						
-				
-
-	}
-
-	// PR14.Ir a la lista de usuarios, borrar el último usuario de la lista,
-	// comprobar que la lista se actualiza y que el usuario desaparece
-	@Test
-	public void PR14() {
-		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
+	public void PR010() {
+		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
 		// de este
 
-		PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
+		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
 				PO_Properties.getSPANISH());
-		
-		// Pinchamos en la opción de menu de Usuarios: //li[contains(@id, 'users-menu')]/a
-		List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'users-menu')]/a");
-		elementos.get(0).click();
-		
-		// Esperamos a aparezca la opción de ver usuarios: //a[contains(@href,
-		// 'user/list')]
-		elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'user/list')]");
-		// Pinchamos en listar usuarios.
-		elementos.get(0).click();
-		
-		//Obtenemos el numero de filas
-		int nFilas=PO_View.checkElement(driver, "free", "//tbody/tr").size();
-		//Borramos el usuario de la ultima fila
-		PO_PrivateView.deleteUsers(driver, nFilas);
-		
-	
-		
-		
+		//
+		PO_PrivateView.clickOptionCheckKey(driver, "logout", "text", "identificate.title", PO_Properties.getSPANISH());
+
 	}
 
-	// PR15.Ir a la lista de usuarios, borrar 3 usuarios, comprobar que la lista se
-	// actualiza y que losusuarios desaparecen.
+	// PR11.Comprobar que el botón cerrar sesión no está visible si el usuario no
+	// está autenticado.
 	@Test
-	public void PR15() {
-		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
-			// de este
-
-			PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
-					PO_Properties.getSPANISH());
-				
-			// Pinchamos en la opción de menu de Usuarios: //li[contains(@id, 'users-menu')]/a
-			List<WebElement> elementos = PO_View.checkElement(driver, "free", "//li[contains(@id,'users-menu')]/a");
-			elementos.get(0).click();
-				
-			// Esperamos a aparezca la opción de ver usuarios: //a[contains(@href,
-			// 'user/list')]
-			elementos = PO_View.checkElement(driver, "free", "//a[contains(@href, 'user/list')]");
-			// Pinchamos en listar usuarios.
-			elementos.get(0).click();
-				
-		
-			//Borramos el usuario de la ultima fila
-			PO_PrivateView.deleteUsers(driver, 2,3,4);
+	public void PR011() {
+		// Comprueba que el elemento logout no aparece al no estar logeado
+		PO_View.checkNotElement(driver, "Logout");
 
 	}
-	
+		
 	public void init() {
 		usersRepository.deleteAll();
 		User user1= new User("PedroDiaz@gmail.com", "Pedro", "Díaz");
@@ -266,7 +201,7 @@ public class Tests_5_UserDeleteTests {
 			
 		
 	}
-	
+		
 	
 	
 

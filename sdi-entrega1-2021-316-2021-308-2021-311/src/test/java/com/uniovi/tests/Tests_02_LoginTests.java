@@ -20,7 +20,6 @@ import com.uniovi.services.SalesService;
 import com.uniovi.services.UsersService;
 import com.uniovi.tests.pageobjects.PO_PrivateView;
 import com.uniovi.tests.pageobjects.PO_Properties;
-import com.uniovi.tests.pageobjects.PO_View;
 
 
 import org.junit.runners.MethodSorters;
@@ -30,7 +29,7 @@ import org.junit.runners.MethodSorters;
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @RunWith(SpringRunner.class)
 @SpringBootTest
-public class Tests_3_LogoutTests {
+public class Tests_02_LoginTests {
 	
 	@Autowired
 	private UsersService usersService;
@@ -45,10 +44,9 @@ public class Tests_3_LogoutTests {
 	
 	
 	
-	static String PathFirefox65= "C:\\Program Files (x86)\\Mozilla Firefox\\firefox.exe";
-	static String Geckdriver024= "C:\\Users\\Kike\\Desktop\\SDI\\geckoDriver\\geckodriver024win64.exe";
 	
-	static WebDriver driver= getDriver(PathFirefox65, Geckdriver024); 
+	
+	static WebDriver driver= getDriver(PathTests.PathFirefox65, PathTests.Geckdriver024); 
 	static String URL= "http://localhost:8090";
 	
 	public static WebDriver getDriver(String PathFirefox, String Geckdriver) {
@@ -80,30 +78,57 @@ public class Tests_3_LogoutTests {
 		//Cerramos el navegador al finalizar las pruebas
 		driver.quit();
 	}
-
-	// PR12. Hacer click en la opción de salir de sesión y comprobar que se redirige
-	// a la página de inicio de sesión (Login).
+	
+	// PR05. Inicio de sesión con datos válidos (administrador).
 	@Test
-	public void PR010() {
-		// Nos logeamos como usuario y que comprobamos que aparecemos en la página
+	public void PR05() {
+		// Nos logeamos como administrador y que comprobamos que aparecemos en la página
 		// de este
+
+		PO_PrivateView.loginAndCheckKey(driver, "admin@email.com", "admin", "administradorAutenticado.message",
+				PO_Properties.getSPANISH());
+
+	}
+
+	// PR06.Inicio de sesión con datos válidos (usuario estándar).
+	@Test
+	public void PR06() {
+		// Nos logeamos como usuario y que comprobamos que aparecemos en la página de
+		// este
 
 		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "123456", "usuarioAutenticado.message",
 				PO_Properties.getSPANISH());
-		//
-		PO_PrivateView.clickOptionCheckKey(driver, "logout", "text", "identificate.title", PO_Properties.getSPANISH());
 
 	}
 
-	// PR11.Comprobar que el botón cerrar sesión no está visible si el usuario no
-	// está autenticado.
+	// PR07.Inicio de sesión con datos inválidos (usuario estándar, campo email y
+	// contraseña vacíos).
 	@Test
-	public void PR011() {
-		// Comprueba que el elemento logout no aparece al no estar logeado
-		PO_View.checkNotElement(driver, "Logout");
+	public void PR07() {
+		// Comprobamos que nos sale el mensae de error correspondiente
+		PO_PrivateView.loginAndCheckKey(driver, "", "", "Error.empty", PO_Properties.getSPANISH());
 
 	}
-		
+
+	// PR08. Inicio de sesión con datos válidos (usuario estándar, email existente,
+	// pero contraseña incorrecta).
+	@Test
+	public void PR08() {
+		// Comprobamos que nos sale el mensae de error correspondiente
+		PO_PrivateView.loginAndCheckKey(driver, "PedroDiaz@gmail.com", "1234", "Error.signup.password.incorrect",
+				PO_Properties.getSPANISH());
+
+	}
+
+	// PR09. Inicio de sesión con datos inválidos (usuario estándar, email no
+	// existente en la aplicación)
+	@Test
+	public void PR09() {
+		PO_PrivateView.loginAndCheckKey(driver, "Pedro@gmail.com", "1234", "Error.signup.email.notexist",
+				PO_Properties.getSPANISH());
+
+	}
+	
 	public void init() {
 		usersRepository.deleteAll();
 		User user1= new User("PedroDiaz@gmail.com", "Pedro", "Díaz");
@@ -202,7 +227,6 @@ public class Tests_3_LogoutTests {
 			
 		
 	}
-		
 	
 	
 
