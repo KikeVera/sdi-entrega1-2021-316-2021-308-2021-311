@@ -63,6 +63,19 @@ public class UsersController {
 		return "user/list";
 	}
 	
+	//Petición  que devuelve la lista de usuarios
+		@RequestMapping("/user/list/update")
+		public String updateList(Model model){
+			
+			//Obtenemos la lista de usuarios y la añadimos al modelo
+			List<User> listaUsuarios;
+		
+			listaUsuarios=usersService.getUsers();
+			
+			model.addAttribute("usersList", listaUsuarios );
+			return"user/list :: tableUsers";
+		}
+	
 	//Petición  que borra los usuarios marcados con la checkbox
 	@RequestMapping(value="/user/delete", method = RequestMethod.POST)
 	public String deleteUser(@RequestParam(value = "checkboxUser", required = false) String checkboxValue[]){
